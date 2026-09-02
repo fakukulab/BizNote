@@ -1,2378 +1,3755 @@
 {
-  "sourceLanguage": "ko",
-  "strings": {
-    "#": {},
-    "BizNote": {},
-    "action.add": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add"
+  "sourceLanguage" : "ko",
+  "strings" : {
+    "" : {
+
+    },
+    "-" : {
+
+    },
+    "%lld" : {
+
+    },
+    "action.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가"
+          }
+        }
+      }
+    },
+    "action.cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
+      }
+    },
+    "action.delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        }
+      }
+    },
+    "action.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        }
+      }
+    },
+    "action.edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "편집"
+          }
+        }
+      }
+    },
+    "action.export" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보내기"
+          }
+        }
+      }
+    },
+    "action.newNote" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Note"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 노트"
+          }
+        }
+      }
+    },
+    "note.type.select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Note Type"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 타입 선택"
+          }
+        }
+      }
+    },
+    "action.ok" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "확인"
+          }
+        }
+      }
+    },
+    "action.save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장"
+          }
+        }
+      }
+    },
+    "action.scanCard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan Card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 스캔"
+          }
+        }
+      }
+    },
+    "action.select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택"
+          }
+        }
+      }
+    },
+    "app.modelContainerFailure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ModelContainer creation failed"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ModelContainer 생성 실패"
+          }
+        }
+      }
+    },
+    "BizNote" : {
+
+    },
+    "businessCard.address" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주소"
+          }
+        }
+      }
+    },
+    "businessCard.company" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Company"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회사"
+          }
+        }
+      }
+    },
+    "businessCard.contact" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연락처"
+          }
+        }
+      }
+    },
+    "businessCard.department" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Department"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부서"
+          }
+        }
+      }
+    },
+    "businessCard.duplicate.check" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "주소록에서 중복 확인"
+          }
+        }
+      }
+    },
+    "businessCard.duplicate.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "중복 확인"
+          }
+        }
+      }
+    },
+    "businessCard.email" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
+          }
+        }
+      }
+    },
+    "businessCard.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No business cards yet"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "등록된 명함이 없습니다"
+          }
+        }
+      }
+    },
+    "businessCard.fax" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fax"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "팩스"
+          }
+        }
+      }
+    },
+    "businessCard.importFromCard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import from Business Card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함에서 가져오기"
+          }
+        }
+      }
+    },
+    "businessCard.importFromPhotos" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "사진 보관함에서 가져오기"
+          }
+        }
+      }
+    },
+    "businessCard.jobTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직함"
+          }
+        }
+      }
+    },
+    "businessCard.memo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memo"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모"
+          }
+        }
+      }
+    },
+    "businessCard.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름"
+          }
+        }
+      }
+    },
+    "businessCard.noScannedImage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No scanned image was found."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스캔된 이미지가 없습니다."
+          }
+        }
+      }
+    },
+    "businessCard.ocrProcessing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing OCR..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 처리 중..."
+          }
+        }
+      }
+    },
+    "businessCard.officePhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Office"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사무실"
+          }
+        }
+      }
+    },
+    "businessCard.phone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mobile"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "휴대폰"
+          }
+        }
+      }
+    },
+    "businessCard.rescan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rescan"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 스캔"
+          }
+        }
+      }
+    },
+    "businessCard.retryHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please try again."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 시도해 주세요."
+          }
+        }
+      }
+    },
+    "businessCard.saveFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to save business card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 저장 실패"
+          }
+        }
+      }
+    },
+    "businessCard.scanTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review Card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 정보 확인"
+          }
+        }
+      }
+    },
+    "businessCard.select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Business Card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 선택"
+          }
+        }
+      }
+    },
+    "businessCard.simulatorCameraUnavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera is unavailable in the simulator."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시뮬레이터에서는 카메라를 사용할 수 없습니다."
+          }
+        }
+      }
+    },
+    "businessCard.simulatorSampleHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use sample data to check the OCR flow."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "샘플 데이터로 OCR 흐름을 확인합니다."
+          }
+        }
+      }
+    },
+    "businessCard.useSampleCard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Sample Business Card"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "샘플 명함 사용"
+          }
+        }
+      }
+    },
+    "businessCard.website" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹사이트"
+          }
+        }
+      }
+    },
+    "category.exhibition" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Note"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사 노트"
+          }
+        }
+      }
+    },
+    "category.meetingMinutes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeting Minutes"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회의록"
+          }
+        }
+      }
+    },
+    "category.workLog" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Log"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업무 일지"
+          }
+        }
+      }
+    },
+    "contacts.access.denied" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "주소록 접근 권한이 필요합니다."
+          }
+        }
+      }
+    },
+    "contacts.add" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "주소록에 추가"
+          }
+        }
+      }
+    },
+    "contacts.add.error" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "주소록에 추가하지 못했습니다"
+          }
+        }
+      }
+    },
+    "contacts.add.success" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "주소록에 추가되었습니다"
+          }
+        }
+      }
+    },
+    "contacts.import" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Import from Contacts"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Import from Contacts"
+          }
+        }
+      }
+    },
+    "customTemplate.achievement" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "성과"
+          }
+        }
+      }
+    },
+    "customTemplate.addEvent" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "행사추가"
+          }
+        }
+      }
+    },
+    "customTemplate.attachments" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "첨부파일"
+          }
+        }
+      }
+    },
+    "customTemplate.taskBoard" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "업무"
+          }
+        }
+      }
+    },
+    "customTemplate.work" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "업무"
+          }
+        }
+      }
+    },
+    "deadline.custom" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직접 선택"
+          }
+        }
+      }
+    },
+    "deadline.nextWeek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Week"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 주"
+          }
+        }
+      }
+    },
+    "deadline.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간"
+          }
+        }
+      }
+    },
+    "deadline.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deadline"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마감"
+          }
+        }
+      }
+    },
+    "deadline.today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘"
+          }
+        }
+      }
+    },
+    "deadline.tomorrow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내일"
+          }
+        }
+      }
+    },
+    "empty.noNotes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No notes yet"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트가 없습니다"
+          }
+        }
+      }
+    },
+    "empty.startNew" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a new note to start"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 노트를 만들어 시작하세요"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Date"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사 날짜"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saved events"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장된 전시회 정보가 없습니다"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.endDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Date"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "종료일"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Name"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사명"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.organizer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "호스트"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.startDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Date"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시작일"
+          }
+        }
+      }
+    },
+    "exhibitionPreset.venue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venue"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소"
           }
+        }
+      }
+    },
+    "exhibitions.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Event"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사 추가"
+          }
+        }
+      }
+    },
+    "exhibitions.contact" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연락처"
+          }
+        }
+      }
+    },
+    "exhibitions.delete.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This action cannot be undone."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 작업은 되돌릴 수 없습니다."
+          }
+        }
+      }
+    },
+    "exhibitions.delete.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete this event?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사를 삭제할까요?"
+          }
+        }
+      }
+    },
+    "exhibitions.exhibitItems" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exhibit Items"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전시품목"
+          }
+        }
+      }
+    },
+    "exhibitions.homepage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Homepage"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "홈페이지"
+          }
+        }
+      }
+    },
+    "exhibitions.image.remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Image"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 삭제"
+          }
+        }
+      }
+    },
+    "exhibitions.image.upload" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload Image"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 업로드"
+          }
+        }
+      }
+    },
+    "exhibitions.introduction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Introduction"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사소개"
+          }
+        }
+      }
+    },
+    "exhibitions.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Name"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사명"
+          }
+        }
+      }
+    },
+    "exhibitions.organizer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
+          }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "추가"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "호스트"
           }
         }
       }
     },
-    "action.cancel": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+    "exhibitions.period.custom" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "취소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직접 지정"
           }
         }
       }
     },
-    "action.delete": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "exhibitions.period.oneMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 month"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "삭제"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1개월"
           }
         }
       }
     },
-    "action.done": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "exhibitions.period.oneYear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 year"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "완료"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1년"
           }
         }
       }
     },
-    "action.edit": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit"
+    "exhibitions.period.sixMonths" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6 months"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "편집"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6개월"
           }
         }
       }
     },
-    "action.export": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export"
+    "exhibitions.period.threeMonths" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3 months"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "내보내기"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3개월"
           }
         }
       }
     },
-    "action.newNote": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Note"
+    "exhibitions.supervisor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organizer"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "새 노트"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주관"
           }
         }
       }
     },
-    "action.save": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
+    "exhibitions.venue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venue"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "저장"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소"
           }
         }
       }
     },
-    "action.scanCard": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan Card"
+    "export.all" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 스캔"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체"
           }
         }
       }
     },
-    "action.select": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select"
+    "export.businessCards" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Business Cards"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "선택"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 데이터"
           }
         }
       }
     },
-    "app.modelContainerFailure": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ModelContainer creation failed"
+    "export.dateRange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date Range"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ModelContainer 생성 실패"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기간"
           }
         }
       }
     },
-    "businessCard.address": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Address"
+    "export.emptyContent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(No content)"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(내용 없음)"
           }
         }
       }
     },
-    "businessCard.company": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Company"
+    "export.endDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "회사"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "종료일"
           }
         }
       }
     },
-    "businessCard.contact": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Contact"
+    "export.header.address" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "연락처"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주소"
           }
         }
       }
     },
-    "businessCard.department": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Department"
+    "export.header.company" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Company"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "부서"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회사"
           }
         }
       }
     },
-    "businessCard.email": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Email"
+    "export.header.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이메일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "등록일"
           }
         }
       }
     },
-    "businessCard.empty": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No business cards yet"
+    "export.header.department" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Department"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "등록된 명함이 없습니다"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부서"
           }
         }
       }
     },
-    "businessCard.fax": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fax"
+    "export.header.email" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "팩스"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
           }
         }
       }
     },
-    "businessCard.importFromCard": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import from Business Card"
+    "export.header.fax" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAX"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함에서 가져오기"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAX"
           }
         }
       }
     },
-    "businessCard.jobTitle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Title"
+    "export.header.jobTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "직함"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직함"
           }
         }
       }
     },
-    "businessCard.memo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memo"
+    "export.header.language" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "메모"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스캔언어"
           }
         }
       }
     },
-    "businessCard.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
+    "export.header.memo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memo"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이름"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모"
           }
         }
       }
     },
-    "businessCard.noScannedImage": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No scanned image was found."
+    "export.header.mobile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mobile"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "스캔된 이미지가 없습니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "휴대폰"
           }
         }
       }
     },
-    "businessCard.ocrProcessing": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Processing OCR..."
+    "export.header.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR 처리 중..."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름"
           }
         }
       }
     },
-    "businessCard.officePhone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Office"
+    "export.header.office" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Office"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "사무실"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사무실"
           }
         }
       }
     },
-    "businessCard.phone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mobile"
+    "export.header.website" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "휴대폰"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹사이트"
           }
         }
       }
     },
-    "businessCard.rescan": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rescan"
+    "export.noData" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is no data to export."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다시 스캔"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보낼 데이터가 없습니다."
           }
         }
       }
     },
-    "businessCard.retryHint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Please try again."
+    "export.notes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다시 시도해 주세요."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 데이터"
           }
         }
       }
     },
-    "businessCard.saveFailed": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to save business card"
+    "export.periodLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 저장 실패"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기간"
           }
         }
       }
     },
-    "businessCard.scanTitle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Review Card"
+    "export.run" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run Export"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 정보 확인"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보내기 실행"
           }
         }
       }
     },
-    "businessCard.select": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Business Card"
+    "export.startDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 선택"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시작일"
           }
         }
       }
     },
-    "businessCard.simulatorCameraUnavailable": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Camera is unavailable in the simulator."
+    "export.tags" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags: %@"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "시뮬레이터에서는 카메라를 사용할 수 없습니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "태그: %@"
           }
         }
       }
     },
-    "businessCard.simulatorSampleHint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use sample data to check the OCR flow."
+    "export.target" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "샘플 데이터로 OCR 흐름을 확인합니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보낼 항목"
           }
         }
       }
     },
-    "businessCard.useSampleCard": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Sample Business Card"
+    "export.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Data"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "샘플 명함 사용"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "데이터 내보내기"
           }
         }
       }
     },
-    "businessCard.website": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Website"
+    "export.untitledNote" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(Untitled)"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "웹사이트"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(제목 없음)"
           }
         }
       }
     },
-    "category.exhibition": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exhibition"
+    "export.updatedAt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " (Updated: %@)"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "전시회"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " (수정: %@)"
           }
         }
       }
     },
-    "category.meetingMinutes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meeting Minutes"
+    "list.bulletPrefix" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "회의록"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•"
           }
         }
       }
     },
-    "category.workLog": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Work Log"
+    "location.error.notFound" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to find your current location."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "업무일지"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 위치를 찾을 수 없습니다."
           }
         }
       }
     },
-    "empty.noNotes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No notes yet"
+    "location.error.permissionDenied" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location permission is required."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "노트가 없습니다"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한이 필요합니다."
           }
         }
       }
     },
-    "empty.startNew": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create a new note to start"
+    "nav.businessCardManagement" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Business Card Management"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "새 노트를 만들어 시작하세요"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 관리"
           }
         }
       }
     },
-    "exhibitionPreset.date": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exhibition Date"
+    "nav.businessCards" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Business Cards"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "행사 날짜"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함"
           }
         }
       }
     },
-    "exhibitionPreset.empty": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No saved exhibitions"
+    "nav.categories" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "저장된 전시회 정보가 없습니다"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카테고리"
           }
         }
       }
     },
-    "exhibitionPreset.endDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End Date"
+    "nav.event" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Event"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "종료일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "행사"
           }
         }
       }
     },
-    "exhibitionPreset.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exhibition Name"
+    "nav.exhibitions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Event"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "행사명"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "전시회"
           }
         }
       }
     },
-    "exhibitionPreset.organizer": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Organizer"
+    "nav.notes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주최사"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트"
           }
         }
       }
     },
-    "exhibitionPreset.startDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Date"
+    "nav.settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "시작일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
           }
         }
       }
     },
-    "exhibitionPreset.venue": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Venue"
+    "note.category" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "장소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카테고리"
           }
         }
       }
     },
-    "export.all": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All"
+    "note.content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memo"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "전체"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모"
           }
         }
       }
     },
-    "export.businessCards": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Business Cards"
+    "note.delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 데이터"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
           }
         }
       }
     },
-    "export.dateRange": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date Range"
+    "note.deleteSelected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Selected"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "기간"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택 삭제"
           }
         }
       }
     },
-    "export.emptyContent": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(No content)"
+    "note.favorite" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(내용 없음)"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "즐겨찾기"
           }
         }
       }
     },
-    "export.endDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End Date"
+    "note.searchPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search notes"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "종료일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 검색"
           }
         }
       }
     },
-    "export.header.address": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Address"
+    "note.tags" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "태그"
           }
         }
       }
     },
-    "export.header.company": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Company"
+    "note.tagsPlaceholder" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comma separated (e.g. ProjectA, Urgent)"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "회사"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "쉼표로 구분 (예: 프로젝트A, 급함)"
           }
         }
       }
     },
-    "export.header.date": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date"
+    "note.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "등록일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제목"
           }
         }
       }
     },
-    "export.header.department": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Department"
+    "note.untitled" : {
+
+    },
+    "noteCategory.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a custom note"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "커스텀 노트를 추가해 보세요"
+          }
+        }
+      }
+    },
+    "noteCategory.color" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "부서"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "색상"
           }
         }
       }
     },
-    "export.header.email": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Email"
+    "noteCategory.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No custom notes yet"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이메일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "커스텀 노트가 없습니다"
           }
         }
       }
     },
-    "export.header.fax": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "FAX"
+    "noteCategory.icon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icon"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "FAX"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아이콘"
           }
         }
       }
     },
-    "export.header.jobTitle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Title"
+    "noteCategory.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "직함"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름"
           }
         }
       }
     },
-    "export.header.language": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language"
+    "noteList.addNote" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "스캔언어"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트"
           }
         }
       }
     },
-    "export.header.memo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memo"
+    "noteList.filterOptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter Options"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "메모"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "필터"
           }
         }
       }
     },
-    "export.header.mobile": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mobile"
+    "noteList.mode.all" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "휴대폰"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체"
           }
         }
       }
     },
-    "export.header.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
+    "noteList.mode.inProgress" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Progress"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이름"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "진행 중"
           }
         }
       }
     },
-    "export.header.office": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Office"
+    "noteList.mode.workLogsWithInProgress" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Logs with In Progress"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "사무실"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "진행 중 업무일지"
           }
         }
       }
     },
-    "export.header.website": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Website"
+    "noteList.sort.newest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Newest"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "웹사이트"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최신순"
           }
         }
       }
     },
-    "export.noData": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "There is no data to export."
+    "noteList.sort.noteType" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "내보낼 데이터가 없습니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트종류별"
           }
         }
       }
     },
-    "export.notes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes"
+    "noteList.sort.oldest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oldest"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "노트 데이터"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오래된순"
           }
         }
       }
     },
-    "export.run": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Run Export"
+    "noteList.sortOptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort Options"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "내보내기 실행"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정렬 방법"
           }
         }
       }
     },
-    "export.startDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Date"
+    "ocr.error.invalidImage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The image is invalid."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "시작일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유효하지 않은 이미지입니다."
           }
         }
       }
     },
-    "export.tags": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tags: %@"
+    "ocr.error.timedOut" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Business card recognition took too long and was stopped. Please try again."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "태그: %@"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 인식이 너무 오래 걸려 중단되었습니다. 다시 시도해 주세요."
           }
         }
       }
     },
-    "export.target": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Target"
+    "search.prompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "내보낼 항목"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색"
           }
         }
       }
     },
-    "export.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export Data"
+    "settings.about" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "데이터 내보내기"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정보"
           }
         }
       }
     },
-    "export.untitledNote": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(Untitled)"
+    "settings.addNote" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Note"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(제목 없음)"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 추가"
           }
         }
       }
     },
-    "export.updatedAt": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " (Updated: %@)"
+    "settings.addNoteCategory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Category"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " (수정: %@)"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카테고리 추가"
           }
         }
       }
     },
-    "list.bulletPrefix": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "•"
+    "settings.addPreset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Event"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "•"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사 정보 추가"
           }
         }
       }
     },
-    "location.error.notFound": {},
-    "location.error.permissionDenied": {},
-    "nav.businessCards": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Business Cards"
+    "settings.exhibitionPresets" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Event"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "행사"
           }
         }
       }
     },
-    "nav.categories": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Categories"
+    "settings.icloud.backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Backup"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "카테고리"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 백업"
           }
         }
       }
     },
-    "nav.exhibitions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "Exhibitions"
+    "settings.icloud.backup.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When enabled, BizNote data and saved card images are included in iCloud device backups."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "전시회"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "켜두면 BizNote 데이터와 저장된 명함 이미지가 iCloud 기기 백업에 포함됩니다."
+          }
+        }
+      }
+    },
+    "settings.iCloud.destination.none" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "선택 안 함"
+          }
+        }
+      }
+    },
+    "settings.iCloud.eventCalendar" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "추가할 캘린더"
+          }
+        }
+      }
+    },
+    "settings.iCloud.reminderList" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "추가할 리스트"
           }
         }
       }
     },
-    "nav.notes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes"
+    "settings.icloud.restart.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync changes are applied the next time you open BizNote."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "노트"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "동기화 변경 사항은 BizNote를 다음에 열 때 적용됩니다."
           }
         }
       }
     },
-    "nav.settings": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "settings.icloud.restart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Required"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "설정"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재시작 필요"
           }
         }
       }
     },
-    "note.category": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Category"
+    "settings.icloud.sync" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Notes"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "카테고리"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 동기화"
           }
         }
       }
     },
-    "note.content": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Content"
+    "settings.icloud.sync.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use private iCloud to sync notes, categories, exhibitions, and business cards across your devices."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "내용"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인 iCloud를 사용해 노트, 카테고리, 전시회 정보, 명함을 기기 간 동기화합니다."
+          }
+        }
+      }
+    },
+    "settings.iCloud.syncEventsWithCalendar" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "행사를 캘린더 앱과 동기화"
+          }
+        }
+      }
+    },
+    "settings.iCloud.syncEventsWithCalendar.hint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "선택한 iCloud 캘린더에 행사 일정이 추가됩니다."
+          }
+        }
+      }
+    },
+    "settings.iCloud.syncTasksWithReminders" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "업무를 미리알림 앱과 동기화"
+          }
+        }
+      }
+    },
+    "settings.iCloud.syncTasksWithReminders.hint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "선택한 iCloud 미리알림 리스트에 업무 항목이 추가됩니다."
           }
         }
       }
     },
-    "note.deleteSelected": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Selected"
+    "settings.icloud.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "선택 삭제"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 동기화"
+          }
+        }
+      }
+    },
+    "settings.integration.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Apple 앱 연동"
           }
         }
       }
     },
-    "note.favorite": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Favorite"
+    "settings.noteCategories" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Manage Note List"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "즐겨찾기"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "노트목록 관리"
           }
         }
       }
     },
-    "note.searchPlaceholder": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search notes"
+    "settings.version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "노트 검색"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전"
           }
         }
       }
     },
-    "note.tags": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tags"
+    "sidebar.eventList" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Event List"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "태그"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "행사 목록"
           }
         }
       }
     },
-    "note.tagsPlaceholder": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comma separated (e.g. ProjectA, Urgent)"
+    "sidebar.noteList" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note List"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "쉼표로 구분 (예: 프로젝트A, 급함)"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트목록"
           }
         }
       }
     },
-    "note.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Title"
+    "sidebar.smartFolders" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart Folders"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "제목"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스마트 폴더"
           }
         }
       }
     },
-    "noteCategory.add": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add a custom category"
+    "smartFolder.allNotes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Notes"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "카테고리를 추가해 보세요"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체 노트"
           }
         }
       }
     },
-    "noteCategory.color": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Color"
+    "smartFolder.favorites" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "색상"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "즐겨찾기"
           }
         }
       }
     },
-    "noteCategory.empty": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No custom categories yet"
+    "smartFolder.recent7Days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent 7 Days"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "커스텀 카테고리가 없습니다"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 7일"
           }
         }
       }
     },
-    "noteCategory.icon": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Icon"
+    "tags.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "아이콘"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가"
           }
         }
       }
     },
-    "noteCategory.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
+    "task.category.call" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이름"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전화"
           }
         }
       }
     },
-    "ocr.error.invalidImage": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The image is invalid."
+    "task.category.email" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "유효하지 않은 이미지입니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
           }
         }
       }
     },
-    "ocr.error.timedOut": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Business card recognition took too long and was stopped. Please try again."
+    "task.category.followUp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow-up"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "명함 인식이 너무 오래 걸려 중단되었습니다. 다시 시도해 주세요."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "후속 조치"
           }
         }
       }
     },
-    "settings.about": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "About"
+    "task.category.meeting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeting"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "정보"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "미팅"
           }
         }
       }
     },
-    "settings.addNoteCategory": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Category"
+    "task.status.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "카테고리 추가"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
           }
         }
       }
     },
-    "settings.addPreset": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Exhibition"
+    "task.status.inProgress" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Progress"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "전시회 정보 추가"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "진행중"
           }
         }
       }
     },
-    "settings.exhibitionPresets": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exhibitions"
+    "task.status.todo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To-Do"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "전시회 정보"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "할 일"
           }
         }
       }
     },
-    "settings.iCloudSync": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud Sync"
+    "template.builder.items" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Template Items"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud 동기화"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "템플릿 항목"
           }
         }
       }
     },
-    "settings.iCloudSyncHint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync notes, business cards, exhibitions, and categories across devices using the same iCloud account. Changes take effect after restarting the app."
+    "template.exhibition.booths" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visited Booths"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "동일한 iCloud 계정의 기기 간에 노트, 명함, 전시회, 카테고리를 동기화합니다. 변경 사항은 앱을 다시 시작한 뒤 적용됩니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "방문 부스"
           }
         }
       }
     },
-    "settings.noteCategories": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manage Categories"
+    "template.exhibition.contacts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contacts"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "카테고리 관리"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "방문객 연락처"
           }
         }
       }
     },
-    "settings.version": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version"
+    "template.exhibition.country" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "버전"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국가"
           }
         }
       }
     },
-    "task.category.call": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Call"
+    "template.exhibition.eventDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "전화"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사일자"
           }
         }
       }
     },
-    "task.category.email": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Email"
+    "template.exhibition.interestPrefix" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "★"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이메일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "★"
           }
         }
       }
     },
-    "task.category.followUp": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Follow-up"
+    "template.exhibition.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Name"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "후속 조치"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사명"
           }
         }
       }
     },
-    "task.category.meeting": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meeting"
+    "template.exhibition.noEventDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "미팅"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
           }
         }
       }
     },
-    "task.status.done": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "template.exhibition.organizer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "완료"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "호스트"
           }
         }
       }
     },
-    "task.status.inProgress": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In Progress"
+    "template.exhibition.participatingDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participating Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "진행중"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참여 날짜"
           }
         }
       }
     },
-    "task.status.todo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To-Do"
+    "template.exhibition.participationType" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participation Type"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "할 일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참여 유형"
           }
         }
       }
     },
-    "template.exhibition.booths": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visited Booths"
+    "template.exhibition.pickPreset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick saved exhibition"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "방문 부스"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장된 전시회 선택"
           }
         }
       }
     },
-    "template.exhibition.contacts": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Contacts"
+    "template.exhibition.presetHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap + to fill from saved exhibitions in Settings."
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "방문객 연락처"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ 버튼으로 설정에 저장된 전시회를 불러올 수 있습니다."
           }
         }
       }
     },
-    "template.exhibition.country": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Country"
+    "template.exhibition.productsServices" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Products / Services"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "국가"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제품 / 서비스"
           }
         }
       }
     },
-    "template.exhibition.eventDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event Date"
+    "template.exhibition.taskDueDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Due Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "행사일자"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마감일"
           }
         }
       }
     },
-    "template.exhibition.interestPrefix": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "★"
+    "template.exhibition.tasks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow-up"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "★"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "후속 조치"
           }
         }
       }
     },
-    "template.exhibition.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exhibition Name"
+    "template.exhibition.taskTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "행사명"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "할 일"
           }
         }
       }
     },
-    "template.exhibition.noEventDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "-"
+    "template.exhibition.type.exhibitor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Exhibitor"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "-"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "전시자"
           }
         }
       }
     },
-    "template.exhibition.organizer": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Organizer"
+    "template.exhibition.type.visitor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitor"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주최사"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "방문자"
           }
         }
       }
     },
-    "template.exhibition.participatingDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Participating Date"
+    "template.exhibition.venue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venue"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "참여 날짜"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소"
           }
         }
       }
     },
-    "template.exhibition.participationType": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Participation Type"
+    "template.followUp.assignee" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assignee"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "참여 유형"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "담당자"
           }
         }
       }
     },
-    "template.exhibition.pickPreset": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick saved exhibition"
+    "template.item.contacts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contacts"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "저장된 전시회 선택"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연락처"
           }
         }
       }
     },
-    "template.exhibition.presetHint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap + to fill from saved exhibitions in Settings."
+    "template.item.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+ 버튼으로 설정에 저장된 전시회를 불러올 수 있습니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일자"
           }
         }
       }
     },
-    "template.exhibition.productsServices": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Products / Services"
+    "template.item.eventName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Name"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "제품 / 서비스"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행사명"
           }
         }
       }
     },
-    "template.exhibition.taskDueDate": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due Date"
+    "template.item.followUp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow-up"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "마감일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "후속 조치"
           }
         }
       }
     },
-    "template.exhibition.taskTitle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "template.item.location" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "할 일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치"
           }
         }
       }
     },
-    "template.exhibition.tasks": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "template.item.memo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memo"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모"
           }
         }
       }
     },
-    "template.exhibition.type.exhibitor": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Exhibitor"
+    "template.item.participants" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participants"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "전시자"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참석자"
           }
         }
       }
     },
-    "template.exhibition.type.visitor": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visitor"
+    "template.item.workItems" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Items"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "방문자"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업무 항목"
           }
         }
       }
     },
-    "template.exhibition.venue": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Venue"
+    "template.meeting.actions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow-up"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "장소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "후속 조치"
           }
         }
       }
     },
-    "template.meeting.actions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Action Items"
+    "template.meeting.agenda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "액션 아이템"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안건"
           }
         }
       }
     },
-    "template.meeting.agenda": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Agenda"
+    "template.meeting.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeting Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "안건"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회의 일시"
           }
         }
       }
     },
-    "template.meeting.date": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meeting Date"
+    "template.meeting.decisions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decisions"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "회의 일시"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "결정 사항"
           }
         }
       }
     },
-    "template.meeting.decisions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Decisions"
+    "template.meeting.discussion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discussion"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "결정 사항"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "논의 사항"
           }
         }
       }
     },
-    "template.meeting.discussion": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discussion"
+    "template.meeting.location" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "논의 사항"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회의 장소"
+          }
+        }
+      }
+    },
+    "template.meeting.participant.company" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "회사"
+          }
+        }
+      }
+    },
+    "template.meeting.participant.name" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "이름"
           }
         }
       }
     },
-    "template.meeting.location": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location"
+    "template.meeting.participants" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participants"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "회의 장소"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참석자"
+          }
+        }
+      }
+    },
+    "template.meeting.participants.add" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "참석자 추가"
           }
         }
       }
     },
-    "template.meeting.participants": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Participants"
+    "template.meeting.searchLocation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Search Location"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "참석자"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "위치 검색"
           }
         }
       }
     },
-    "template.meeting.searchLocation": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "Search Location"
+    "template.meeting.searchLocationPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Search place or address"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "위치 검색"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "장소나 주소 검색"
           }
         }
       }
     },
-    "template.meeting.searchLocationPlaceholder": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "Search place or address"
+    "template.meeting.useCurrentLocation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Use Current Location"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "장소나 주소 검색"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "현재 위치 사용"
           }
         }
       }
     },
-    "template.meeting.useCurrentLocation": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "Use Current Location"
+    "template.meeting.useThisLocation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use This Location"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "machine_translated",
-            "value": "현재 위치 사용"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 위치 사용"
+          }
+        }
+      }
+    },
+    "template.taskForm.assignee" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "담당자"
           }
         }
       }
     },
-    "template.meeting.useThisLocation": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use This Location"
+    "template.workLog.achievements" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achievements"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이 위치 사용"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주요 성과"
+          }
+        }
+      }
+    },
+    "template.workLog.attachments.add" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "파일 추가"
           }
         }
       }
     },
-    "template.workLog.achievements": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Achievements"
+    "template.workLog.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주요 성과"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업무 날짜"
           }
         }
       }
     },
-    "template.workLog.date": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date"
+    "template.workLog.durationUnit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " h"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "업무 날짜"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간"
           }
         }
       }
     },
-    "template.workLog.issues": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Issues"
+    "template.workLog.issues" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issues"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이슈/문제점"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이슈/문제점"
+          }
+        }
+      }
+    },
+    "template.workLog.item.add" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add Item"
           }
         }
       }
+    },
+    "template.workLog.item.placeholder" : {
+
     },
-    "template.workLog.itemPlaceholder": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "template.workLog.itemPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "업무"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업무"
           }
         }
       }
     },
-    "template.workLog.items": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Work Items"
+    "template.workLog.items" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Items"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "업무 항목"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업무 항목"
           }
         }
       }
     },
-    "template.workLog.nextTodos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next To-Do"
+    "template.workLog.nextTodos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next To-Do"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다음 할 일"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 할 일"
           }
         }
       }
     },
-    "template.workLog.nextTodosHint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Items here will carry over to the next Work Log. (one per line)"
+    "template.workLog.nextTodosHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items here will carry over to the next Work Log. (one per line)"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "여기에 적은 항목은 다음 Work Log를 만들 때 자동으로 옮겨집니다. (줄바꿈으로 구분)"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기에 적은 항목은 다음 업무일지를 만들 때 자동으로 옮겨집니다. (줄바꿈으로 구분)"
           }
         }
       }
     },
-    "template.workLog.sameDayMeetings": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Same-day Meetings"
+    "template.workLog.sameDayMeetings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same-day Meetings"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "같은 날 회의록"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "같은 날 회의록"
           }
         }
       }
     }
   },
-  "version": "1.3"
+  "version" : "1.3"
 }

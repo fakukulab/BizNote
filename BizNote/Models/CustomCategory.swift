@@ -12,6 +12,10 @@ final class CustomCategory {
     var colorGreen: Double = 0.227
     var colorBlue: Double = 0.929
     var createdAt: Date = Date()
+    var templateData: String = TemplateCoder.encode(CustomNoteTemplateData.defaultTemplate)
+
+    @Relationship(deleteRule: .nullify, inverse: \Note.customCategory)
+    var notes: [Note]? = []
 
     var accentColor: Color {
         get { Color(red: colorRed, green: colorGreen, blue: colorBlue) }
@@ -27,12 +31,14 @@ final class CustomCategory {
     init(
         name: String = "",
         systemIconName: String = "folder.fill",
-        accentColor: Color = Color(red: 0.486, green: 0.227, blue: 0.929)
+        accentColor: Color = Color(red: 0.486, green: 0.227, blue: 0.929),
+        templateData: String = TemplateCoder.encode(CustomNoteTemplateData.defaultTemplate)
     ) {
         self.id = UUID()
         self.name = name
         self.systemIconName = systemIconName
         self.createdAt = Date()
+        self.templateData = templateData
         self.colorRed = 0.486
         self.colorGreen = 0.227
         self.colorBlue = 0.929

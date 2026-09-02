@@ -1,5 +1,24 @@
 import SwiftUI
 import SwiftData
+import Foundation
+
+private enum ExhibitionDeadlineOption: String, CaseIterable, Identifiable {
+    case today
+    case tomorrow
+    case nextWeek
+    case custom
+
+    var id: String { rawValue }
+
+    var localizedName: String {
+        switch self {
+        case .today: return String(localized: "deadline.today", defaultValue: "Today")
+        case .tomorrow: return String(localized: "deadline.tomorrow", defaultValue: "Tomorrow")
+        case .nextWeek: return String(localized: "deadline.nextWeek", defaultValue: "Next Week")
+        case .custom: return String(localized: "deadline.custom", defaultValue: "Custom")
+        }
+    }
+}
 
 struct ExhibitionTemplateSection: View {
     @Bindable var note: Note
@@ -12,6 +31,7 @@ struct ExhibitionTemplateSection: View {
     @State private var data: ExhibitionTemplateData
     @State private var cardImportTarget: ExhibitionCardImportTarget?
     @State private var showCardImporter: Bool = false
+    @State private var deadlineOptions: [UUID: ExhibitionDeadlineOption] = [:]
 
     init(
         note: Note,
@@ -39,6 +59,9 @@ struct ExhibitionTemplateSection: View {
             }
             Section(String(localized: "template.exhibition.organizer")) {
                 TextField(String(localized: "template.exhibition.organizer"), text: $data.organizer)
+            }
+            Section(String(localized: "exhibitions.supervisor", defaultValue: "Organizer")) {
+                TextField(String(localized: "exhibitions.supervisor", defaultValue: "Organizer"), text: $data.supervisor)
             }
 
             Section(String(localized: "template.exhibition.participationType")) {
@@ -121,22 +144,70 @@ struct ExhibitionTemplateSection: View {
     private func tasksSection() -> some View {
         Section(String(localized: "template.exhibition.tasks")) {
             ForEach($data.tasks) { $task in
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Toggle(String(localized: "task.status.done"), isOn: $task.isCompleted).labelsHidden()
-                        TextField(String(localized: "template.exhibition.taskTitle"), text: $task.title)
+                VStack(alignment: .leading, spacing: 10) {
+                    TextField(String(localized: "template.exhibition.taskTitle"), text: $task.title)
+                        .textFieldStyle(.roundedBorder)
+
+                    HStack(spacing: 8) {
+                        Menu {
+                            Text(String(localized: "note.category", defaultValue: "Category"))
+                                .foregroundStyle(.secondary)
+                                .disabled(true)
+                            Divider()
+                            ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.selectableCases) { category in
+                                Button {
+                                    task.category = category
+                                } label: {
+                                    Label(category.localizedName, systemImage: category.systemImage)
+                                }
+                            }
+                        } label: {
+                            Label(task.category.localizedName, systemImage: task.category.systemImage)
+                        }
+
+                        Menu {
+                            Text(String(localized: "deadline.title", defaultValue: "Deadline"))
+                                .foregroundStyle(.secondary)
+                                .disabled(true)
+                            Divider()
+                            ForEach(ExhibitionDeadlineOption.allCases) { option in
+                                Button {
+                                    deadlineOptions[task.id] = option
+                                    applyDeadlineOption(option, to: $task.dueDate)
+                                } label: {
+                                    Text(option.localizedName)
+                                }
+                            }
+                        } label: {
+                            Label(
+                                selectedDeadlineOption(for: task.id, dueDate: task.dueDate).localizedName,
+                                systemImage: "calendar"
+                            )
+                        }
+
+                        if selectedDeadlineOption(for: task.id, dueDate: task.dueDate) == .custom {
+                            DatePicker(
+                                String(localized: "template.exhibition.taskDueDate"),
+                                selection: $task.dueDate,
+                                displayedComponents: .date
+                            )
+                            .labelsHidden()
+                        } else {
+                            Text(shortDateString(for: task.dueDate))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        DatePicker(
+                            String(localized: "deadline.time", defaultValue: "Time"),
+                            selection: $task.dueDate,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .labelsHidden()
+
+                        TextField(String(localized: "template.followUp.assignee"), text: assigneeBinding($task))
                             .textFieldStyle(.roundedBorder)
                     }
-                    Picker(String(localized: "note.category"), selection: $task.category) {
-                        ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.allCases) { c in
-                            Label(c.localizedName, systemImage: c.systemImage).tag(c)
-                        }
-                    }
-                    DatePicker(
-                        String(localized: "template.exhibition.taskDueDate"),
-                        selection: $task.dueDate,
-                        displayedComponents: [.date]
-                    )
                 }
                 .padding(.vertical, 4)
             }
@@ -160,6 +231,7 @@ struct ExhibitionTemplateSection: View {
         data.participatingDate = preset.startDate
         data.venue = preset.venue
         data.organizer = preset.organizer
+        data.supervisor = preset.supervisor
         data.presetID = preset.id
     }
 
@@ -186,6 +258,107 @@ struct ExhibitionTemplateSection: View {
     private func save() {
         note.templateData = TemplateCoder.encode(data)
         onChange()
+        syncReminders()
+    }
+
+    private func syncReminders() {
+        for item in data.tasks where !item.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let itemID = item.id
+            Task {
+                let reminderID = await CalendarReminderSyncService.shared.syncReminder(
+                    title: item.title,
+                    detail: item.detail,
+                    assignees: item.assignees,
+                    dueDate: item.dueDate,
+                    isCompleted: item.isCompleted,
+                    existingIdentifier: item.reminderIdentifier
+                )
+                guard let reminderID,
+                      let index = data.tasks.firstIndex(where: { $0.id == itemID }),
+                      data.tasks[index].reminderIdentifier != reminderID else { return }
+                data.tasks[index].reminderIdentifier = reminderID
+            }
+        }
+    }
+
+    private func assigneeBinding(_ task: Binding<ExhibitionTemplateData.TaskItem>) -> Binding<String> {
+        Binding(
+            get: { task.wrappedValue.assignees.first ?? "" },
+            set: { newValue in
+                task.wrappedValue.assignees = newValue.isEmpty ? [] : [newValue]
+            }
+        )
+    }
+
+    private func deadlineBinding(id: UUID, dueDate: Binding<Date>) -> Binding<ExhibitionDeadlineOption> {
+        Binding(
+            get: { selectedDeadlineOption(for: id, dueDate: dueDate.wrappedValue) },
+            set: { option in
+                deadlineOptions[id] = option
+                applyDeadlineOption(option, to: dueDate)
+            }
+        )
+    }
+
+    private func selectedDeadlineOption(for id: UUID, dueDate: Date) -> ExhibitionDeadlineOption {
+        deadlineOptions[id] ?? deadlineOption(for: dueDate)
+    }
+
+    private func deadlineOption(for date: Date) -> ExhibitionDeadlineOption {
+        let calendar = Calendar.current
+        let selectedDay = calendar.startOfDay(for: date)
+        let today = calendar.startOfDay(for: Date())
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)
+        let nextWeek = calendar.date(byAdding: .day, value: 7, to: today)
+
+        if selectedDay == today {
+            return .today
+        }
+        if selectedDay == tomorrow {
+            return .tomorrow
+        }
+        if selectedDay == nextWeek {
+            return .nextWeek
+        }
+        return .custom
+    }
+
+    private func applyDeadlineOption(_ option: ExhibitionDeadlineOption, to dueDate: Binding<Date>) {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let targetDate: Date?
+
+        switch option {
+        case .today:
+            targetDate = today
+        case .tomorrow:
+            targetDate = calendar.date(byAdding: .day, value: 1, to: today)
+        case .nextWeek:
+            targetDate = calendar.date(byAdding: .day, value: 7, to: today)
+        case .custom:
+            targetDate = nil
+        }
+
+        if let targetDate {
+            dueDate.wrappedValue = date(targetDate, withTimeFrom: dueDate.wrappedValue)
+        }
+    }
+
+    private func date(_ date: Date, withTimeFrom original: Date) -> Date {
+        let calendar = Calendar.current
+        let time = calendar.dateComponents([.hour, .minute], from: original)
+        return calendar.date(
+            bySettingHour: time.hour ?? 9,
+            minute: time.minute ?? 0,
+            second: 0,
+            of: date
+        ) ?? date
+    }
+
+    private func shortDateString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yy"
+        return formatter.string(from: date)
     }
 }
 
@@ -292,6 +465,7 @@ struct ExhibitionPresetPickerView: View {
             ExhibitionPresetEditor(preset: nil) { newPreset in
                 context.insert(newPreset)
                 try? context.save()
+                Task { await CalendarReminderSyncService.shared.syncEvent(for: newPreset) }
                 onApplyPreset(newPreset)
                 showAddPreset = false
             }
@@ -299,7 +473,7 @@ struct ExhibitionPresetPickerView: View {
     }
 }
 
-private struct BusinessCardImportPickerView: View {
+struct BusinessCardImportPickerView: View {
     var onSelect: (BusinessCard) -> Void
 
     @Query(sort: \BusinessCard.createdAt, order: .reverse)
@@ -358,14 +532,11 @@ private struct VisitedBoothRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                TextField("#", text: $booth.boothNumber)
-                    .frame(width: 60)
-                    .textFieldStyle(.roundedBorder)
-                TextField(String(localized: "businessCard.company"), text: $booth.companyName)
-                    .textFieldStyle(.roundedBorder)
-            }
+            TextField(String(localized: "businessCard.company"), text: $booth.companyName)
+                .textFieldStyle(.roundedBorder)
             TextField(String(localized: "businessCard.name"), text: $booth.contactPerson)
+                .textFieldStyle(.roundedBorder)
+            TextField(String(localized: "businessCard.jobTitle"), text: $booth.jobTitle)
                 .textFieldStyle(.roundedBorder)
             TextField(String(localized: "businessCard.email"), text: $booth.contactEmail)
                 .textFieldStyle(.roundedBorder)
@@ -378,19 +549,18 @@ private struct VisitedBoothRow: View {
                       text: $booth.productsServices, axis: .vertical)
                 .lineLimit(1...3)
                 .textFieldStyle(.roundedBorder)
-            HStack {
-                Text(verbatim: "\(String(localized: "template.exhibition.interestPrefix")) \(booth.interestLevel)")
+            VStack(alignment: .leading, spacing: 4) {
+                Text(String(localized: "businessCard.memo"))
                     .font(.caption)
-                    .foregroundStyle(.orange)
-                Slider(value: Binding(
-                    get: { Double(booth.interestLevel) },
-                    set: { booth.interestLevel = Int($0) }
-                ), in: 1...5, step: 1)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $booth.notes)
+                    .frame(minHeight: editorHeight(for: booth.notes))
+                    .padding(4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(.quaternary)
+                    )
             }
-            TextField(String(localized: "businessCard.memo"),
-                      text: $booth.notes, axis: .vertical)
-                .lineLimit(1...3)
-                .textFieldStyle(.roundedBorder)
 
             Button {
                 onImportCard()
@@ -402,19 +572,56 @@ private struct VisitedBoothRow: View {
         }
         .padding(.vertical, 6)
     }
+
+    private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
+        let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
+        return CGFloat(lineCount) * 22 + 24
+    }
 }
 
 private struct ContactRow: View {
     @Binding var contact: ExhibitionTemplateData.Contact
     var onImportCard: () -> Void
 
+    private static let countryNames: [String] = {
+        let locale = Locale.current
+        let names = Locale.Region.isoRegions.compactMap { locale.localizedString(forRegionCode: $0.identifier) }
+        return Array(Set(names)).sorted { lhs, rhs in
+            lhs.localizedStandardCompare(rhs) == .orderedAscending
+        }
+    }()
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            TextField(String(localized: "template.exhibition.country"), text: $contact.country)
+            Menu {
+                ForEach(Self.countryNames, id: \.self) { country in
+                    Button {
+                        contact.country = country
+                    } label: {
+                        Text(country)
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(contact.country.isEmpty
+                         ? String(localized: "template.exhibition.country")
+                         : contact.country)
+                        .foregroundStyle(contact.country.isEmpty ? .secondary : .primary)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(.quaternary)
+                )
+            }
+            TextField(String(localized: "businessCard.company"), text: $contact.company)
                 .textFieldStyle(.roundedBorder)
             TextField(String(localized: "businessCard.name"), text: $contact.name)
-                .textFieldStyle(.roundedBorder)
-            TextField(String(localized: "businessCard.company"), text: $contact.company)
                 .textFieldStyle(.roundedBorder)
             TextField(String(localized: "businessCard.jobTitle"), text: $contact.jobTitle)
                 .textFieldStyle(.roundedBorder)
@@ -425,9 +632,18 @@ private struct ContactRow: View {
             TextField(String(localized: "businessCard.phone"), text: $contact.phone)
                 .textFieldStyle(.roundedBorder)
                 .keyboardType(.phonePad)
-            TextField(String(localized: "businessCard.memo"), text: $contact.memo, axis: .vertical)
-                .lineLimit(1...3)
-                .textFieldStyle(.roundedBorder)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(String(localized: "businessCard.memo"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $contact.memo)
+                    .frame(minHeight: editorHeight(for: contact.memo))
+                    .padding(4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(.quaternary)
+                    )
+            }
 
             Button {
                 onImportCard()
@@ -438,6 +654,11 @@ private struct ContactRow: View {
             .buttonStyle(.bordered)
         }
         .padding(.vertical, 6)
+    }
+
+    private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
+        let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
+        return CGFloat(lineCount) * 22 + 24
     }
 }
 
@@ -452,6 +673,20 @@ struct ExhibitionPresetEditor: View {
     @State private var endDate: Date = Date()
     @State private var venue: String = ""
     @State private var organizer: String = ""
+    @State private var introduction: String = ""
+    @State private var exhibitItems: String = ""
+    @State private var supervisor: String = ""
+    @State private var contact: String = ""
+    @State private var homepage: String = ""
+    @State private var locationService = LocationService()
+    @State private var isLocating = false
+    @State private var locationError: String?
+    @State private var showLocationSearch = false
+
+    private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
+        let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
+        return CGFloat(lineCount) * 22 + 24
+    }
 
     var body: some View {
         Form {
@@ -467,10 +702,59 @@ struct ExhibitionPresetEditor: View {
                            displayedComponents: [.date])
             }
             Section(String(localized: "exhibitionPreset.venue")) {
-                TextField(String(localized: "exhibitionPreset.venue"), text: $venue)
+                HStack {
+                    TextField(String(localized: "exhibitionPreset.venue"), text: $venue)
+
+                    Button {
+                        useCurrentLocation()
+                    } label: {
+                        if isLocating {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "location.fill")
+                        }
+                    }
+                    .buttonStyle(.borderless)
+                    .disabled(isLocating)
+                    .accessibilityLabel(String(localized: "template.meeting.useCurrentLocation"))
+
+                    Button {
+                        showLocationSearch = true
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(String(localized: "template.meeting.searchLocation"))
+                }
+
+                if let locationError {
+                    Text(locationError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+            Section(String(localized: "exhibitions.introduction", defaultValue: "Event Introduction")) {
+                TextEditor(text: $introduction)
+                    .frame(minHeight: editorHeight(for: introduction))
+            }
+            Section(String(localized: "exhibitions.exhibitItems", defaultValue: "Exhibit Items")) {
+                TextEditor(text: $exhibitItems)
+                    .frame(minHeight: editorHeight(for: exhibitItems))
             }
             Section(String(localized: "exhibitionPreset.organizer")) {
                 TextField(String(localized: "exhibitionPreset.organizer"), text: $organizer)
+            }
+            Section(String(localized: "exhibitions.supervisor", defaultValue: "Organizer")) {
+                TextField(String(localized: "exhibitions.supervisor", defaultValue: "Organizer"), text: $supervisor)
+            }
+            Section(String(localized: "exhibitions.contact", defaultValue: "Contact")) {
+                TextField(String(localized: "exhibitions.contact", defaultValue: "Contact"), text: $contact)
+            }
+            Section(String(localized: "exhibitions.homepage", defaultValue: "Homepage")) {
+                TextField(String(localized: "exhibitions.homepage", defaultValue: "Homepage"), text: $homepage)
+                    .keyboardType(.URL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
             }
         }
         .navigationTitle(preset == nil
@@ -489,10 +773,23 @@ struct ExhibitionPresetEditor: View {
                     target.endDate = max(startDate, endDate)
                     target.venue = venue
                     target.organizer = organizer
+                    target.introduction = introduction
+                    target.exhibitItems = exhibitItems
+                    target.supervisor = supervisor
+                    target.contact = contact
+                    target.homepage = homepage
                     onSave(target)
                     dismiss()
                 }
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+        .sheet(isPresented: $showLocationSearch) {
+            NavigationStack {
+                LocationSearchSheet { address in
+                    venue = address
+                    showLocationSearch = false
+                }
             }
         }
         .onAppear {
@@ -502,7 +799,25 @@ struct ExhibitionPresetEditor: View {
                 endDate = preset.endDate
                 venue = preset.venue
                 organizer = preset.organizer
+                introduction = preset.introduction
+                exhibitItems = preset.exhibitItems
+                supervisor = preset.supervisor
+                contact = preset.contact
+                homepage = preset.homepage
             }
+        }
+    }
+
+    private func useCurrentLocation() {
+        isLocating = true
+        locationError = nil
+        Task {
+            do {
+                venue = try await locationService.currentAddress()
+            } catch {
+                locationError = error.localizedDescription
+            }
+            isLocating = false
         }
     }
 }

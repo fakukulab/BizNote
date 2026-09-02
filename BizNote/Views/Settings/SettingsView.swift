@@ -2,25 +2,31 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var showExporter: Bool = false
-    @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled: Bool = true
 
     var body: some View {
         Form {
-            Section {
-                Toggle(isOn: $iCloudSyncEnabled) {
-                    Label(String(localized: "settings.iCloudSync"), systemImage: "icloud")
-                }
-                Text(String(localized: "settings.iCloudSyncHint"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
             Section(String(localized: "settings.noteCategories")) {
                 NavigationLink {
                     NoteCategoriesSettingsView()
                 } label: {
                     Label(String(localized: "settings.noteCategories"),
                           systemImage: "folder.badge.gearshape")
+                }
+            }
+
+            Section(String(localized: "settings.icloud.title")) {
+                NavigationLink {
+                    CloudSyncSettingsView()
+                } label: {
+                    Label(String(localized: "settings.icloud.title"), systemImage: "icloud")
+                }
+            }
+
+            Section(String(localized: "settings.integration.title", defaultValue: "Apple 앱 연동")) {
+                NavigationLink {
+                    IntegrationSettingsView()
+                } label: {
+                    Label(String(localized: "settings.integration.title", defaultValue: "Apple 앱 연동"), systemImage: "app.connected.to.app.below.fill")
                 }
             }
 

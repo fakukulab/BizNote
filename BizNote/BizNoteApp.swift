@@ -3,13 +3,15 @@ import SwiftData
 
 @main
 struct BizNoteApp: App {
-    private static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
-    private static let cloudKitContainerIdentifier = "iCloud.com.biznote.app"
+    static let cloudKitContainerIdentifier = "iCloud.com.fakuku.biznote"
 
     let container: ModelContainer
     @AppStorage("appLanguage") private var appLanguage: String = "system"
 
     init() {
+        CloudSyncSettings.registerDefaults()
+        CloudSyncSettings.applyBackupPreference()
+
         do {
             let schema = Schema([
                 Note.self,
@@ -17,14 +19,12 @@ struct BizNoteApp: App {
                 ExhibitionPreset.self,
                 CustomCategory.self
             ])
-            let iCloudSyncEnabled = UserDefaults.standard.object(forKey: Self.iCloudSyncEnabledKey) as? Bool ?? true
-            let cloudKitDatabase: ModelConfiguration.CloudKitDatabase = iCloudSyncEnabled
-                ? .private(Self.cloudKitContainerIdentifier)
-                : .none
             let config = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: false,
-                cloudKitDatabase: cloudKitDatabase
+                cloudKitDatabase: CloudSyncSettings.cloudKitDatabase(
+                    containerIdentifier: Self.cloudKitContainerIdentifier
+                )
             )
             container = try ModelContainer(for: schema, configurations: [config])
         } catch {

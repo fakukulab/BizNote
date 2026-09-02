@@ -78,6 +78,7 @@ struct NoteCategoriesSettingsView: View {
 
 struct NoteCategoryEditor: View {
     let category: CustomCategory?
+    let addTitle: String
     var onSave: (CustomCategory) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -85,12 +86,27 @@ struct NoteCategoryEditor: View {
     @State private var name: String = ""
     @State private var systemIconName: String = "folder.fill"
     @State private var color: Color = Color(red: 0.486, green: 0.227, blue: 0.929)
+    @State private var templateSections: [CustomNoteTemplateSection]
 
     private let iconChoices: [String] = [
         "folder.fill", "tag.fill", "star.fill", "flag.fill",
         "book.fill", "lightbulb.fill", "cart.fill", "airplane",
         "car.fill", "heart.fill", "bell.fill", "paperclip"
     ]
+
+    init(
+        category: CustomCategory?,
+        addTitle: String = String(localized: "settings.addNoteCategory"),
+        onSave: @escaping (CustomCategory) -> Void
+    ) {
+        self.category = category
+        self.addTitle = addTitle
+        self.onSave = onSave
+        let template = category
+            .flatMap { TemplateCoder.decode(CustomNoteTemplateData.self, from: $0.templateData) }
+            ?? CustomNoteTemplateData.defaultTemplate
+        _templateSections = State(initialValue: template.sections)
+    }
 
     var body: some View {
         Form {
@@ -121,9 +137,36 @@ struct NoteCategoryEditor: View {
                     }
                 }
             }
+
+            Section(String(localized: "template.builder.items", defaultValue: "Template Items")) {
+                ForEach($templateSections) { $section in
+                    HStack(spacing: 12) {
+                        Button {
+                            section.isEnabled.toggle()
+                        } label: {
+                            Image(systemName: section.isEnabled ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(section.isEnabled ? Color.accentColor : Color.secondary)
+                        }
+                        .buttonStyle(.plain)
+
+                        Image(systemName: section.kind.systemImage)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 24)
+
+                        TextField(section.kind.defaultTitle, text: $section.title)
+                            .textFieldStyle(.roundedBorder)
+
+                        Spacer()
+                    }
+                }
+                .onMove { source, destination in
+                    templateSections.move(fromOffsets: source, toOffset: destination)
+                }
+            }
         }
+        .environment(\.editMode, .constant(.active))
         .navigationTitle(category == nil
-                         ? String(localized: "settings.addNoteCategory")
+                         ? addTitle
                          : String(localized: "action.edit"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -136,10 +179,11 @@ struct NoteCategoryEditor: View {
                     target.name = name
                     target.systemIconName = systemIconName
                     target.accentColor = color
+                    target.templateData = TemplateCoder.encode(CustomNoteTemplateData(sections: templateSections))
                     onSave(target)
                     dismiss()
                 }
-                .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || !templateSections.contains { $0.isEnabled })
             }
         }
         .onAppear {

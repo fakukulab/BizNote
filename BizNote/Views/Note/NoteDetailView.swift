@@ -10,8 +10,7 @@ struct NoteDetailView: View {
     @State private var cardScannerRequest: NoteCardScannerRequest?
     @State private var locationSearchRequest: LocationSearchRequest?
     @State private var exhibitionPresetRequest: ExhibitionPresetRequest?
-    @State private var tagsText: String = ""
-    @State private var initializedTagsText: Bool = false
+    @State private var selectedBusinessCardID: UUID?
     @State private var isReadyForSheets: Bool = false
 
     var body: some View {
@@ -55,26 +54,16 @@ struct NoteDetailView: View {
             categoryTemplateSection()
 
             Section(String(localized: "note.content")) {
-                TextField(
-                    String(localized: "note.content"),
-                    text: $note.content,
-                    axis: .vertical
-                )
-                .lineLimit(6...20)
-                .onChange(of: note.content) { _, _ in touch() }
+                TextEditor(text: $note.content)
+                    .frame(minHeight: editorHeight(for: note.content, minimumLines: 3))
+                    .onChange(of: note.content) { _, _ in touch() }
             }
 
             businessCardsSection()
 
             Section(String(localized: "note.tags")) {
-                TextField(String(localized: "note.tagsPlaceholder"), text: $tagsText)
-                    .onChange(of: tagsText) { _, newValue in
-                        note.tags = newValue
-                            .split(separator: ",")
-                            .map { $0.trimmingCharacters(in: .whitespaces) }
-                            .filter { !$0.isEmpty }
-                        touch()
-                    }
+                TagEditorView(tags: $note.tags)
+                    .onChange(of: note.tags) { _, _ in touch() }
             }
         }
         .navigationTitle(note.title.isEmpty ? String(localized: "action.newNote") : note.title)
@@ -123,20 +112,26 @@ struct NoteDetailView: View {
                 }
             }
         }
-        .environment(\.isReadyForSheetPresentation, isReadyForSheets)
-        .onTransitionComplete { isReadyForSheets = true }
-        .onAppear {
-            if !initializedTagsText {
-                tagsText = note.tags.joined(separator: ", ")
-                initializedTagsText = true
+        .navigationDestination(item: $selectedBusinessCardID) { cardID in
+            if let card = businessCard(with: cardID) {
+                BusinessCardResultView(card: card, attachedNote: note)
             }
         }
+        .environment(\.isReadyForSheetPresentation, isReadyForSheets)
+        .onTransitionComplete { isReadyForSheets = true }
+    }
+
+    private func editorHeight(for text: String, minimumLines: Int) -> CGFloat {
+        let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
+        return CGFloat(lineCount) * 22 + 24
     }
 
     @ViewBuilder
     private func categoryTemplateSection() -> some View {
-        if note.isCustomCategory {
-            EmptyView()
+        if usesCustomTemplate {
+            CustomNoteTemplateView(data: customTemplateBinding, attachmentPaths: $note.attachmentPaths)
+                .onAppear { seedCustomTemplateIfNeeded() }
+                .onChange(of: note.attachmentPaths) { _, _ in touch() }
         } else {
             switch note.category {
             case .workLog:
@@ -153,23 +148,64 @@ struct NoteDetailView: View {
         }
     }
 
+    private var usesCustomTemplate: Bool {
+        if note.isCustomCategory {
+            return true
+        }
+        guard let data = TemplateCoder.decode(CustomNoteTemplateData.self, from: note.templateData) else {
+            return false
+        }
+        return data.sections.contains { $0.isEnabled }
+    }
+
+    private var customTemplateBinding: Binding<CustomNoteTemplateData> {
+        Binding(
+            get: {
+                TemplateCoder.decode(CustomNoteTemplateData.self, from: note.templateData)
+                ?? note.customCategory.flatMap { TemplateCoder.decode(CustomNoteTemplateData.self, from: $0.templateData) }
+                ?? CustomNoteTemplateData.defaultTemplate
+            },
+            set: { newValue in
+                note.templateData = TemplateCoder.encode(newValue)
+                touch()
+            }
+        )
+    }
+
+    private func seedCustomTemplateIfNeeded() {
+        guard TemplateCoder.decode(CustomNoteTemplateData.self, from: note.templateData) == nil else { return }
+        note.templateData = TemplateCoder.encode(
+            note.customCategory.flatMap { TemplateCoder.decode(CustomNoteTemplateData.self, from: $0.templateData) }
+            ?? CustomNoteTemplateData.defaultTemplate
+        )
+        touch()
+    }
+
     @ViewBuilder
     private func businessCardsSection() -> some View {
         let cards = note.businessCards ?? []
         if !cards.isEmpty {
             Section(String(localized: "nav.businessCards")) {
                 ForEach(cards) { card in
-                    NavigationLink {
-                        BusinessCardResultView(card: card, attachedNote: note)
+                    Button {
+                        selectedBusinessCardID = card.id
                     } label: {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(card.name.isEmpty ? String(localized: "businessCard.name") : card.name)
-                                .font(.headline)
-                            if !card.company.isEmpty {
-                                Text(card.company).font(.caption).foregroundStyle(.secondary)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(card.name.isEmpty ? String(localized: "businessCard.name") : card.name)
+                                    .font(.headline)
+                                if !card.company.isEmpty {
+                                    Text(card.company).font(.caption).foregroundStyle(.secondary)
+                                }
                             }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.tertiary)
                         }
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                 }
                 .onDelete { indexSet in
                     for i in indexSet {
@@ -180,6 +216,10 @@ struct NoteDetailView: View {
                 }
             }
         }
+    }
+
+    private func businessCard(with id: UUID) -> BusinessCard? {
+        note.businessCards?.first { $0.id == id }
     }
 
     private func touch() {

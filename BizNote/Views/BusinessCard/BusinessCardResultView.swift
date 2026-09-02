@@ -39,17 +39,30 @@ struct BusinessCardResultView: View {
                              text: $card.phone, keyboard: .phonePad)
                 LabeledField(label: String(localized: "businessCard.officePhone"),
                              text: $card.officePhone, keyboard: .phonePad)
-                LabeledField(label: String(localized: "businessCard.fax"),
-                             text: $card.fax, keyboard: .phonePad)
                 LabeledField(label: String(localized: "businessCard.website"),
                              text: $card.website, keyboard: .URL)
-                LabeledField(label: String(localized: "businessCard.address"),
-                             text: $card.address, keyboard: .default)
             }
 
             Section(String(localized: "businessCard.memo")) {
                 TextField(String(localized: "businessCard.memo"), text: $card.memo, axis: .vertical).lineLimit(2...6)
             }
+
+            BusinessCardDuplicateSection(
+                name: card.name,
+                company: card.company,
+                phone: card.phone,
+                officePhone: card.officePhone,
+                email: card.email,
+                website: card.website
+            )
+
+            BusinessCardContactActionsView(
+                name: $card.name,
+                company: $card.company,
+                jobTitle: $card.jobTitle,
+                phone: $card.phone,
+                email: $card.email
+            )
         }
         .navigationTitle(String(localized: "businessCard.scanTitle"))
         .navigationBarTitleDisplayMode(.inline)

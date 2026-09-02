@@ -1,0 +1,5 @@
+title: BizNote
+description: Business notes and business card management for iPhone and iPad.
+theme: minima
+plugins:
+  - jekyll-feed

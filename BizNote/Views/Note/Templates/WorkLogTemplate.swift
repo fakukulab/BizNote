@@ -29,7 +29,13 @@ struct WorkLogTemplateSection: View {
             Section(String(localized: "template.workLog.date")) {
                 DatePicker(
                     String(localized: "template.workLog.date"),
-                    selection: $data.date,
+                    selection: Binding(
+                        get: { data.date },
+                        set: { newDate in
+                            data.date = newDate
+                            updateTitle(for: newDate)
+                        }
+                    ),
                     displayedComponents: [.date]
                 )
                 .labelsHidden()
@@ -50,7 +56,7 @@ struct WorkLogTemplateSection: View {
 
             Section(String(localized: "template.workLog.items")) {
                 ForEach($data.workItems) { $item in
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         TextField(String(localized: "template.workLog.itemPlaceholder"), text: $item.task)
                         Picker(String(localized: "task.status.todo"), selection: $item.status) {
                             ForEach(WorkLogTemplateData.WorkItem.TaskStatus.allCases) { s in
@@ -58,11 +64,6 @@ struct WorkLogTemplateSection: View {
                             }
                         }
                         .pickerStyle(.segmented)
-                        Stepper(value: $item.duration, in: 0...24, step: 0.5) {
-                            Text(String(format: "%.1f h", item.duration))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
                     }
                     .padding(.vertical, 10)
                 }
@@ -73,19 +74,22 @@ struct WorkLogTemplateSection: View {
                 } label: {
                     Label(String(localized: "action.add"), systemImage: "plus.circle.fill")
                 }
-                .padding(.top, 4)
+                .padding(.top, 12)
             }
 
             Section(String(localized: "template.workLog.achievements")) {
-                TextField(String(localized: "template.workLog.achievements"), text: $data.achievements, axis: .vertical).lineLimit(2...6)
+                TextEditor(text: $data.achievements)
+                    .frame(minHeight: editorHeight(for: data.achievements))
             }
 
             Section(String(localized: "template.workLog.issues")) {
-                TextField(String(localized: "template.workLog.issues"), text: $data.issues, axis: .vertical).lineLimit(2...6)
+                TextEditor(text: $data.issues)
+                    .frame(minHeight: editorHeight(for: data.issues))
             }
 
             Section {
-                TextField(String(localized: "template.workLog.nextTodos"), text: $data.nextTodos, axis: .vertical).lineLimit(2...6)
+                TextEditor(text: $data.nextTodos)
+                    .frame(minHeight: editorHeight(for: data.nextTodos))
             } header: {
                 Text(String(localized: "template.workLog.nextTodos"))
             } footer: {
@@ -93,11 +97,58 @@ struct WorkLogTemplateSection: View {
                     .font(.caption)
             }
         }
+        .onChange(of: data.workItems) { _, _ in
+            syncAchievementsFromDoneItems()
+        }
         .onChange(of: data) { _, _ in save() }
     }
 
     private func save() {
         note.templateData = TemplateCoder.encode(data)
         onChange()
+        syncReminders()
     }
+
+    private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
+        let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
+        return CGFloat(lineCount) * 22 + 24
+    }
+
+    private func syncAchievementsFromDoneItems() {
+        let completedTasks = data.workItems
+            .filter { $0.status == .done }
+            .map { $0.task.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        let achievements = completedTasks.joined(separator: "\n")
+        guard data.achievements != achievements else { return }
+        data.achievements = achievements
+    }
+
+    private func syncReminders() {
+        for item in data.workItems where !item.task.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let itemID = item.id
+            Task {
+                let reminderID = await CalendarReminderSyncService.shared.syncReminder(
+                    title: item.task,
+                    detail: item.status.localizedName,
+                    assignees: [],
+                    dueDate: data.date,
+                    isCompleted: item.status == .done,
+                    existingIdentifier: item.reminderIdentifier
+                )
+                guard let reminderID,
+                      let index = data.workItems.firstIndex(where: { $0.id == itemID }),
+                      data.workItems[index].reminderIdentifier != reminderID else { return }
+                data.workItems[index].reminderIdentifier = reminderID
+            }
+        }
+    }
+
+    private func updateTitle(for date: Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        note.title = "\(formatter.string(from: date)) \(NoteCategory.workLog.localizedName)"
+    }
+
 }

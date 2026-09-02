@@ -2,6 +2,37 @@
 import ImageIO
 import UIKit
 
+struct RecognizedLine: Sendable {
+    let text: String
+    let candidateTexts: [String]
+    let confidence: Float
+    let minX: Double
+    let minY: Double
+    let width: Double
+    let height: Double
+
+    init(
+        text: String,
+        candidateTexts: [String] = [],
+        confidence: Float,
+        minX: Double,
+        minY: Double,
+        width: Double,
+        height: Double
+    ) {
+        self.text = text
+        self.candidateTexts = candidateTexts
+        self.confidence = confidence
+        self.minX = minX
+        self.minY = minY
+        self.width = width
+        self.height = height
+    }
+
+    var maxY: Double { minY + height }
+    var midY: Double { minY + height / 2 }
+}
+
 final class OCRService: @unchecked Sendable {
     enum OCRError: LocalizedError {
         case invalidImage
@@ -16,10 +47,18 @@ final class OCRService: @unchecked Sendable {
 
     func recognizeText(
         from image: UIImage,
-        languages: [String] = ["ko-KR", "en-US"],
-        timeout: Duration = .seconds(20)
+        languages: [String] = ["ko-KR", "en-US", "ja-JP", "zh-Hans", "zh-Hant"],
+        timeout: Duration = .seconds(30)
     ) async throws -> [String] {
-        let raceState = OCRRaceState<[String]>()
+        try await recognizeLines(from: image, languages: languages, timeout: timeout).map(\.text)
+    }
+
+    func recognizeLines(
+        from image: UIImage,
+        languages: [String] = ["ko-KR", "en-US", "ja-JP", "zh-Hans", "zh-Hant"],
+        timeout: Duration = .seconds(30)
+    ) async throws -> [RecognizedLine] {
+        let raceState = OCRRaceState<[RecognizedLine]>()
 
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
@@ -27,7 +66,7 @@ final class OCRService: @unchecked Sendable {
 
                 let recognitionTask = Task.detached(priority: .userInitiated) {
                     do {
-                        let lines = try await self.performRecognition(from: image, languages: languages)
+                        let lines = try await self.performRecognitionLines(from: image, languages: languages)
                         raceState.finish(.success(lines))
                     } catch {
                         raceState.finish(.failure(error))
@@ -49,16 +88,16 @@ final class OCRService: @unchecked Sendable {
         }
     }
 
-    private func performRecognition(
+    private func performRecognitionLines(
         from image: UIImage,
         languages: [String]
-    ) async throws -> [String] {
+    ) async throws -> [RecognizedLine] {
         guard let cgImage = image.cgImage else {
             throw OCRError.invalidImage
         }
 
         let requestBox = RequestBox()
-        let recognitionState = OCRRaceState<[String]>()
+        let recognitionState = OCRRaceState<[RecognizedLine]>()
 
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
@@ -70,12 +109,32 @@ final class OCRService: @unchecked Sendable {
                         return
                     }
                     let observations = request.results as? [VNRecognizedTextObservation] ?? []
-                    let strings = observations.compactMap { $0.topCandidates(1).first?.string }
-                    recognitionState.finish(.success(strings))
+                    let lines = observations.compactMap { observation -> RecognizedLine? in
+                        let candidates = observation.topCandidates(3)
+                        guard let candidate = self.preferredCandidate(from: candidates) else { return nil }
+                        let box = observation.boundingBox
+                        return RecognizedLine(
+                            text: candidate.string,
+                            candidateTexts: candidates.map(\.string),
+                            confidence: candidate.confidence,
+                            minX: Double(box.minX),
+                            minY: Double(box.minY),
+                            width: Double(box.width),
+                            height: Double(box.height)
+                        )
+                    }
+                    .sorted {
+                        let yDifference = abs($0.midY - $1.midY)
+                        if yDifference > 0.025 {
+                            return $0.midY > $1.midY
+                        }
+                        return $0.minX < $1.minX
+                    }
+                    recognitionState.finish(.success(lines))
                 }
                 request.recognitionLanguages = languages
-                request.recognitionLevel = .fast
-                request.usesLanguageCorrection = false
+                request.recognitionLevel = .accurate
+                request.usesLanguageCorrection = true
                 requestBox.request = request
 
                 let handler = VNImageRequestHandler(
@@ -94,6 +153,62 @@ final class OCRService: @unchecked Sendable {
         } onCancel: {
             requestBox.request?.cancel()
             recognitionState.cancel()
+        }
+    }
+
+    private func preferredCandidate(from candidates: [VNRecognizedText]) -> VNRecognizedText? {
+        candidates.max {
+            candidateScore($0) < candidateScore($1)
+        }
+    }
+
+    private func candidateScore(_ candidate: VNRecognizedText) -> Double {
+        let text = candidate.string
+        var score = Double(candidate.confidence)
+
+        if looksLikeEmail(text) {
+            score += 0.45
+        }
+        if looksLikePhoneNumber(text) {
+            score += 0.35
+        }
+        if looksLikeURL(text) {
+            score += 0.3
+        }
+        if containsContactLabel(text) {
+            score += 0.12
+        }
+
+        return score
+    }
+
+    private func looksLikeEmail(_ text: String) -> Bool {
+        let pattern = #"[A-Za-z0-9._%+\-]+[@＠][A-Za-z0-9.\-]+\.[A-Za-z]{2,}"#
+        return text.range(of: pattern, options: .regularExpression) != nil
+    }
+
+    private func looksLikePhoneNumber(_ text: String) -> Bool {
+        let normalized = text
+            .replacingOccurrences(of: "O", with: "0")
+            .replacingOccurrences(of: "o", with: "0")
+            .replacingOccurrences(of: "I", with: "1")
+            .replacingOccurrences(of: "l", with: "1")
+        let pattern = #"(?:\+\d{1,3}[-\s]?|0)\d{1,3}[-\s]?\d{3,4}[-\s]?\d{4}"#
+        return normalized.range(of: pattern, options: .regularExpression) != nil
+    }
+
+    private func looksLikeURL(_ text: String) -> Bool {
+        let lowercased = text.lowercased()
+        return lowercased.contains("www.") ||
+            lowercased.contains("http://") ||
+            lowercased.contains("https://") ||
+            lowercased.range(of: #"\.[a-z0-9]{2,4}\b"#, options: .regularExpression) != nil
+    }
+
+    private func containsContactLabel(_ text: String) -> Bool {
+        let lowercased = text.lowercased()
+        return ["tel", "phone", "mobile", "cell", "fax", "email", "mail", "www"].contains {
+            lowercased.contains($0)
         }
     }
 

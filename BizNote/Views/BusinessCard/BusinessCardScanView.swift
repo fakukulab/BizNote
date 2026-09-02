@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import VisionKit
+import PhotosUI
 
 struct BusinessCardScanView: UIViewControllerRepresentable {
     var onFinish: ([UIImage]) -> Void
@@ -61,6 +62,7 @@ struct BusinessCardScanFlow: View {
     @State private var processingTimeoutTask: Task<Void, Never>?
     @State private var currentProcessingID: UUID?
     @State private var saveErrorMessage: String?
+    @State private var photoPickerItem: PhotosPickerItem?
 
     var body: some View {
         NavigationStack {
@@ -117,6 +119,26 @@ struct BusinessCardScanFlow: View {
                         cancelProcessing()
                         dismiss()
                     }
+                }
+                if processedDraft == nil && !isProcessing && errorMessage == nil {
+                    ToolbarItem(placement: .primaryAction) {
+                        PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                            Image(systemName: "photo.on.rectangle")
+                        }
+                        .accessibilityLabel(String(localized: "businessCard.importFromPhotos", defaultValue: "사진 보관함에서 가져오기"))
+                    }
+                }
+            }
+            .onChange(of: photoPickerItem) { _, newValue in
+                guard let newValue else { return }
+                Task {
+                    if let data = try? await newValue.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data) {
+                        await MainActor.run {
+                            startProcessing([image])
+                        }
+                    }
+                    photoPickerItem = nil
                 }
             }
             .alert(String(localized: "businessCard.saveFailed"), isPresented: Binding(
@@ -227,15 +249,18 @@ private enum BusinessCardScanProcessor {
             throw BusinessCardScanError.noScannedImage
         }
 
+        let processedImage = BusinessCardImageProcessor.normalizedBusinessCardImage(from: first)
+
         let ocr = OCRService()
-        let lines = try await ocr.recognizeText(from: first)
+        let recognizedLines = try await ocr.recognizeLines(from: processedImage)
         try Task.checkCancellation()
 
+        let lines = recognizedLines.map(\.text)
         let language = OCRService.detectPrimaryLanguage(from: lines)
         let parser = BusinessCardParser()
-        var draft = parser.parse(lines: lines, language: language)
+        var draft = parser.parse(recognizedLines: recognizedLines, language: language)
 
-        if let url = saveImage(first, id: draft.id) {
+        if let url = saveImage(processedImage, id: draft.id) {
             draft.imagePath = url.lastPathComponent
         }
 
@@ -289,18 +314,31 @@ private struct BusinessCardDraftResultView: View {
                                   text: $draft.phone, keyboard: .phonePad)
                 DraftLabeledField(label: String(localized: "businessCard.officePhone"),
                                   text: $draft.officePhone, keyboard: .phonePad)
-                DraftLabeledField(label: String(localized: "businessCard.fax"),
-                                  text: $draft.fax, keyboard: .phonePad)
                 DraftLabeledField(label: String(localized: "businessCard.website"),
                                   text: $draft.website, keyboard: .URL)
-                DraftLabeledField(label: String(localized: "businessCard.address"),
-                                  text: $draft.address, keyboard: .default)
             }
 
             Section(String(localized: "businessCard.memo")) {
                 TextField(String(localized: "businessCard.memo"), text: $draft.memo, axis: .vertical)
                     .lineLimit(2...6)
             }
+
+            BusinessCardDuplicateSection(
+                name: draft.name,
+                company: draft.company,
+                phone: draft.phone,
+                officePhone: draft.officePhone,
+                email: draft.email,
+                website: draft.website
+            )
+
+            BusinessCardContactActionsView(
+                name: $draft.name,
+                company: $draft.company,
+                jobTitle: $draft.jobTitle,
+                phone: $draft.phone,
+                email: $draft.email
+            )
         }
         .navigationTitle(String(localized: "businessCard.scanTitle"))
         .navigationBarTitleDisplayMode(.inline)

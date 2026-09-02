@@ -16,8 +16,6 @@ final class ExcelExportService {
             String(localized: "export.header.email"),
             String(localized: "export.header.mobile"),
             String(localized: "export.header.office"),
-            String(localized: "export.header.fax"),
-            String(localized: "export.header.address"),
             String(localized: "export.header.website"),
             String(localized: "export.header.memo"),
             String(localized: "export.header.language"),
@@ -31,8 +29,7 @@ final class ExcelExportService {
             let row = [
                 card.name, card.company, card.department,
                 card.jobTitle, card.email, card.phone,
-                card.officePhone, card.fax, card.address,
-                card.website, card.memo, card.scannedLanguage,
+                card.officePhone, card.website, card.memo, card.scannedLanguage,
                 DateFormatter.exportTimestamp.string(from: card.createdAt)
             ].map(escape)
             csv += row.joined(separator: ",") + "\r\n"
