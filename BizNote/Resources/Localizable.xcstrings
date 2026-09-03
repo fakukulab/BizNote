@@ -2671,6 +2671,38 @@
         }
       }
     },
+    "settings.privacyPolicy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "settings.support" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지원"
+          }
+        }
+      }
+    },
     "sidebar.eventList" : {
       "localizations" : {
         "en" : {

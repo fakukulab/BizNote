@@ -23,6 +23,7 @@ targets:
       - path: BizNote
     resources:
       - path: BizNote/Resources
+      - path: PrivacyInfo.xcprivacy
     info:
       path: BizNote/Info.plist
       properties:
@@ -41,17 +42,20 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         NSCameraUsageDescription: 명함을 스캔하여 연락처 정보를 자동으로 입력합니다.
+        NSCalendarsFullAccessUsageDescription: 등록한 행사 일정을 캘린더 앱에 추가하기 위해 사용합니다.
+        NSContactsUsageDescription: 명함 정보를 주소록에 추가하거나 중복된 연락처를 확인하기 위해 사용합니다.
+        NSRemindersFullAccessUsageDescription: 업무 항목을 미리 알림 앱과 동기화하기 위해 사용합니다.
+        NSLocationWhenInUseUsageDescription: 회의록의 위치 항목에 현재 위치를 자동으로 입력하기 위해 사용합니다.
         NSPhotoLibraryUsageDescription: 노트에 사진을 첨부할 수 있습니다.
-        NSPhotoLibraryAddUsageDescription: 스캔한 명함 이미지를 사진 앱에 저장합니다.
         ITSAppUsesNonExemptEncryption: false
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.biznote.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.fakuku.biznote
         GENERATE_INFOPLIST_FILE: NO
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: 8S2Y83DCGM
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CURRENT_PROJECT_VERSION: 1

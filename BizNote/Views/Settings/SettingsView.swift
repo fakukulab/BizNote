@@ -42,6 +42,18 @@ struct SettingsView: View {
                 LabeledContent(String(localized: "settings.version")) {
                     Text(appVersion)
                 }
+
+                if let privacyPolicyURL {
+                    Link(destination: privacyPolicyURL) {
+                        Label(String(localized: "settings.privacyPolicy"), systemImage: "hand.raised")
+                    }
+                }
+
+                if let supportURL {
+                    Link(destination: supportURL) {
+                        Label(String(localized: "settings.support"), systemImage: "questionmark.circle")
+                    }
+                }
             }
         }
         .navigationTitle(String(localized: "nav.settings"))
@@ -54,6 +66,14 @@ struct SettingsView: View {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         return "\(v) (\(b))"
+    }
+
+    private var privacyPolicyURL: URL? {
+        URL(string: "https://fakukulab.github.io/BizNote/privacy-policy/")
+    }
+
+    private var supportURL: URL? {
+        URL(string: "https://fakukulab.github.io/BizNote/support/")
     }
 }
 
