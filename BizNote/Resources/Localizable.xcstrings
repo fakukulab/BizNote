@@ -122,22 +122,6 @@
         }
       }
     },
-    "note.type.select" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select Note Type"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "노트 타입 선택"
-          }
-        }
-      }
-    },
     "action.ok" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -2083,6 +2067,22 @@
         }
       }
     },
+    "note.type.select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Note Type"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노트 타입 선택"
+          }
+        }
+      }
+    },
     "note.untitled" : {
 
     },
@@ -2474,6 +2474,12 @@
     "settings.iCloud.destination.none" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "None"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2485,6 +2491,12 @@
     "settings.iCloud.eventCalendar" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Calendar"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2496,6 +2508,12 @@
     "settings.iCloud.reminderList" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Reminders List"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2571,6 +2589,12 @@
     "settings.iCloud.syncEventsWithCalendar" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sync Events with Calendar"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2582,6 +2606,12 @@
     "settings.iCloud.syncEventsWithCalendar.hint" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Events are added to the selected iCloud calendar."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2593,6 +2623,12 @@
     "settings.iCloud.syncTasksWithReminders" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sync Tasks with Reminders"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2604,6 +2640,12 @@
     "settings.iCloud.syncTasksWithReminders.hint" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tasks are added to the selected iCloud Reminders list."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2631,6 +2673,12 @@
     "settings.integration.title" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Apple App Sync"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -2651,22 +2699,6 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "노트목록 관리"
-          }
-        }
-      }
-    },
-    "settings.version" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "버전"
           }
         }
       }
@@ -2699,6 +2731,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "지원"
+          }
+        }
+      }
+    },
+    "settings.version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전"
           }
         }
       }
