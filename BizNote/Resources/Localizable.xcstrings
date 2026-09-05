@@ -931,14 +931,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "No saved events"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "저장된 전시회 정보가 없습니다"
+            "state" : "machine_translated",
+            "value" : "저장된 행사 정보가 없습니다"
           }
         }
       }
@@ -1878,14 +1878,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "machine_translated",
+            "state" : "needs_review",
             "value" : "Event"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "machine_translated",
-            "value" : "전시회"
+            "value" : "행사"
           }
         }
       }
