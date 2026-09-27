@@ -63,7 +63,7 @@ struct SettingsView: View {
     }
 
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.01"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2"
     }
 
     private var privacyPolicyURL: URL? {
