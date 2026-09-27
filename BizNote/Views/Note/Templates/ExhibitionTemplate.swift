@@ -144,72 +144,7 @@ struct ExhibitionTemplateSection: View {
     private func tasksSection() -> some View {
         Section(String(localized: "template.exhibition.tasks")) {
             ForEach($data.tasks) { $task in
-                VStack(alignment: .leading, spacing: 10) {
-                    TextField(String(localized: "template.exhibition.taskTitle"), text: $task.title)
-                        .textFieldStyle(.roundedBorder)
-
-                    HStack(spacing: 8) {
-                        Menu {
-                            Text(String(localized: "note.category", defaultValue: "Category"))
-                                .foregroundStyle(.secondary)
-                                .disabled(true)
-                            Divider()
-                            ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.selectableCases) { category in
-                                Button {
-                                    task.category = category
-                                } label: {
-                                    Label(category.localizedName, systemImage: category.systemImage)
-                                }
-                            }
-                        } label: {
-                            Label(task.category.localizedName, systemImage: task.category.systemImage)
-                        }
-
-                        Menu {
-                            Text(String(localized: "deadline.title", defaultValue: "Deadline"))
-                                .foregroundStyle(.secondary)
-                                .disabled(true)
-                            Divider()
-                            ForEach(ExhibitionDeadlineOption.allCases) { option in
-                                Button {
-                                    deadlineOptions[task.id] = option
-                                    applyDeadlineOption(option, to: $task.dueDate)
-                                } label: {
-                                    Text(option.localizedName)
-                                }
-                            }
-                        } label: {
-                            Label(
-                                selectedDeadlineOption(for: task.id, dueDate: task.dueDate).localizedName,
-                                systemImage: "calendar"
-                            )
-                        }
-
-                        if selectedDeadlineOption(for: task.id, dueDate: task.dueDate) == .custom {
-                            DatePicker(
-                                String(localized: "template.exhibition.taskDueDate"),
-                                selection: $task.dueDate,
-                                displayedComponents: .date
-                            )
-                            .labelsHidden()
-                        } else {
-                            Text(shortDateString(for: task.dueDate))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        DatePicker(
-                            String(localized: "deadline.time", defaultValue: "Time"),
-                            selection: $task.dueDate,
-                            displayedComponents: .hourAndMinute
-                        )
-                        .labelsHidden()
-
-                        TextField(String(localized: "template.followUp.assignee"), text: assigneeBinding($task))
-                            .textFieldStyle(.roundedBorder)
-                    }
-                }
-                .padding(.vertical, 4)
+                ExhibitionTaskRow(task: $task)
             }
             .onDelete { data.tasks.remove(atOffsets: $0) }
 
@@ -371,6 +306,127 @@ private enum ExhibitionCardImportTarget: Identifiable {
         case .booth(let id): return "booth-\(id.uuidString)"
         case .contact(let id): return "contact-\(id.uuidString)"
         }
+    }
+}
+
+private struct ExhibitionTaskRow: View {
+    @Binding var task: ExhibitionTemplateData.TaskItem
+    @State private var showDetailEditor = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                TextField(String(localized: "template.exhibition.taskTitle"), text: $task.title)
+                    .textFieldStyle(.roundedBorder)
+
+                Button {
+                    showDetailEditor = true
+                } label: {
+                    Image(systemName: "info.circle")
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+            }
+
+            let summary = taskSummary
+            if !summary.isEmpty {
+                Text(summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 4)
+        .sheet(isPresented: $showDetailEditor) {
+            NavigationStack {
+                ExhibitionTaskDetailEditor(task: $task) {
+                    task.isDetailConfigured = true
+                }
+            }
+        }
+    }
+
+    private var taskSummary: String {
+        guard task.isDetailConfigured else { return task.assignees.first ?? "" }
+        return [
+            task.category.localizedName,
+            detailDateString(for: task.dueDate),
+            detailTimeString(for: task.dueDate),
+            task.assignees.first ?? ""
+        ]
+        .filter { !$0.isEmpty }
+        .joined(separator: " · ")
+    }
+
+    private func detailDateString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
+    }
+
+    private func detailTimeString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}
+
+private struct ExhibitionTaskDetailEditor: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var task: ExhibitionTemplateData.TaskItem
+    var onDone: () -> Void = {}
+
+    var body: some View {
+        Form {
+            Section(String(localized: "note.category", defaultValue: "Category")) {
+                Picker(String(localized: "note.category", defaultValue: "Category"), selection: $task.category) {
+                    ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.selectableCases) { category in
+                        Label(category.localizedName, systemImage: category.systemImage)
+                            .tag(category)
+                    }
+                }
+            }
+
+            Section(String(localized: "deadline.title", defaultValue: "Deadline")) {
+                DatePicker(
+                    String(localized: "template.exhibition.taskDueDate"),
+                    selection: $task.dueDate,
+                    displayedComponents: .date
+                )
+                DatePicker(
+                    String(localized: "deadline.time", defaultValue: "Time"),
+                    selection: $task.dueDate,
+                    displayedComponents: .hourAndMinute
+                )
+            }
+
+            Section(String(localized: "template.followUp.assignee")) {
+                TextField(String(localized: "template.followUp.assignee"), text: assignee)
+            }
+        }
+        .navigationTitle(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(String(localized: "action.cancel")) {
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button(String(localized: "action.done")) {
+                    onDone()
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private var assignee: Binding<String> {
+        Binding(
+            get: { task.assignees.first ?? "" },
+            set: { task.assignees = $0.isEmpty ? [] : [$0] }
+        )
     }
 }
 

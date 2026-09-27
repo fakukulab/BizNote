@@ -199,7 +199,8 @@ struct ExhibitionDetailView: View {
             Task {
                 if let data = try? await newValue.loadTransferable(type: Data.self),
                    let image = UIImage(data: data),
-                   let savedPath = ExhibitionLogoStorage.save(image, id: preset.id) {
+                   let savedPath = ExhibitionLogoStorage.save(image, id: UUID()) {
+                    removeDraftLogoIfNeeded()
                     draft.logoImagePath = savedPath
                     logoImage = image
                 }
@@ -234,7 +235,7 @@ struct ExhibitionDetailView: View {
 
                     if !draft.logoImagePath.isEmpty {
                         Button(role: .destructive) {
-                            ExhibitionLogoStorage.remove(path: draft.logoImagePath)
+                            removeDraftLogoIfNeeded()
                             draft.logoImagePath = ""
                             logoImage = nil
                         } label: {
@@ -273,6 +274,7 @@ struct ExhibitionDetailView: View {
     }
 
     private func cancelEditing() {
+        removeDraftLogoIfNeeded()
         resetDraft()
         isEditing = false
     }
@@ -296,6 +298,12 @@ struct ExhibitionDetailView: View {
         try? context.save()
         Task { await CalendarReminderSyncService.shared.syncEvent(for: preset) }
         isEditing = false
+    }
+
+    private func removeDraftLogoIfNeeded() {
+        guard !draft.logoImagePath.isEmpty,
+              draft.logoImagePath != preset.logoImagePath else { return }
+        ExhibitionLogoStorage.remove(path: draft.logoImagePath)
     }
 
     private func resetDraft() {

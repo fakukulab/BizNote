@@ -29,7 +29,12 @@ final class LocationService: NSObject {
     func currentAddress() async throws -> String {
         let location = try await requestCurrentLocation()
         let geocoder = CLGeocoder()
-        let placemarks = try await geocoder.reverseGeocodeLocation(location)
+        let placemarks: [CLPlacemark]
+        do {
+            placemarks = try await geocoder.reverseGeocodeLocation(location)
+        } catch {
+            throw mapLocationError(error)
+        }
         guard let placemark = placemarks.first else {
             throw LocationError.notFound
         }
@@ -90,7 +95,26 @@ final class LocationService: NSObject {
     fileprivate func handleLocationError(_ error: Error) {
         guard let continuation = locationContinuation else { return }
         locationContinuation = nil
-        continuation.resume(throwing: error)
+        continuation.resume(throwing: mapLocationError(error))
+    }
+
+    private func mapLocationError(_ error: Error) -> Error {
+        guard let error = error as? CLError else {
+            return LocationError.notFound
+        }
+
+        switch error.code {
+        case .denied:
+            return LocationError.permissionDenied
+        case .locationUnknown,
+             .network,
+             .geocodeFoundNoResult,
+             .geocodeFoundPartialResult,
+             .geocodeCanceled:
+            return LocationError.notFound
+        default:
+            return LocationError.notFound
+        }
     }
 
     private final class Delegate: NSObject, CLLocationManagerDelegate {

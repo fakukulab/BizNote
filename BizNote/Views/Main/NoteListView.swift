@@ -354,16 +354,30 @@ struct NoteListView: View {
 
         if let previous,
            let prevData = TemplateCoder.decode(WorkLogTemplateData.self, from: previous.templateData) {
+            let inProgressItems = prevData.workItems
+                .filter { $0.status == .inProgress && !$0.task.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                .map { previousItem in
+                    var item = WorkLogTemplateData.WorkItem()
+                    item.task = previousItem.task
+                    item.status = .inProgress
+                    return item
+                }
+
             let carryLines = prevData.nextTodos
                 .split(whereSeparator: { $0 == "\n" || $0 == "," })
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { !$0.isEmpty }
-            data.workItems = carryLines.map { line in
-                var item = WorkLogTemplateData.WorkItem()
-                item.task = line
-                item.status = .todo
-                return item
-            }
+            let todoItems = carryLines
+                .filter { line in
+                    !inProgressItems.contains { $0.task == line }
+                }
+                .map { line in
+                    var item = WorkLogTemplateData.WorkItem()
+                    item.task = line
+                    item.status = .todo
+                    return item
+                }
+            data.workItems = inProgressItems + todoItems
         }
 
         note.templateData = TemplateCoder.encode(data)
@@ -670,16 +684,30 @@ struct NoteColumnListView: View {
 
         if let previous,
            let prevData = TemplateCoder.decode(WorkLogTemplateData.self, from: previous.templateData) {
+            let inProgressItems = prevData.workItems
+                .filter { $0.status == .inProgress && !$0.task.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                .map { previousItem in
+                    var item = WorkLogTemplateData.WorkItem()
+                    item.task = previousItem.task
+                    item.status = .inProgress
+                    return item
+                }
+
             let carryLines = prevData.nextTodos
                 .split(whereSeparator: { $0 == "\n" || $0 == "," })
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { !$0.isEmpty }
-            data.workItems = carryLines.map { line in
-                var item = WorkLogTemplateData.WorkItem()
-                item.task = line
-                item.status = .todo
-                return item
-            }
+            let todoItems = carryLines
+                .filter { line in
+                    !inProgressItems.contains { $0.task == line }
+                }
+                .map { line in
+                    var item = WorkLogTemplateData.WorkItem()
+                    item.task = line
+                    item.status = .todo
+                    return item
+                }
+            data.workItems = inProgressItems + todoItems
         }
 
         note.templateData = TemplateCoder.encode(data)

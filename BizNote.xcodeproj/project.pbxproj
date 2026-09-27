@@ -35,6 +35,7 @@
 		556077D43031CA5F00FDBAFD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556077D33031CA5F00FDBAFD /* LocationService.swift */; };
 		556077D63031CF2400FDBAFD /* LocationSearchCompleter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556077D53031CF2400FDBAFD /* LocationSearchCompleter.swift */; };
 		556077D83031CF2B00FDBAFD /* LocationSearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556077D73031CF2B00FDBAFD /* LocationSearchSheet.swift */; };
+		557B038D3068204B008AEC30 /* MinimalZipWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557B038C3068204B008AEC30 /* MinimalZipWriter.swift */; };
 		558C1BE13032C97D008B5056 /* iCloudSyncSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558C1BE03032C97D008B5056 /* iCloudSyncSettings.swift */; };
 		558C1BE33032C993008B5056 /* iCloudSyncSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558C1BE23032C993008B5056 /* iCloudSyncSettingsView.swift */; };
 		55A75AB6304BB6A7005032B0 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 55A75AB5304BB6A7005032B0 /* InfoPlist.xcstrings */; };
@@ -88,6 +89,7 @@
 		556077D33031CA5F00FDBAFD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		556077D53031CF2400FDBAFD /* LocationSearchCompleter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchCompleter.swift; sourceTree = "<group>"; };
 		556077D73031CF2B00FDBAFD /* LocationSearchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchSheet.swift; sourceTree = "<group>"; };
+		557B038C3068204B008AEC30 /* MinimalZipWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimalZipWriter.swift; sourceTree = "<group>"; };
 		558C1BDD3032ADAF008B5056 /* BizNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BizNote.entitlements; sourceTree = "<group>"; };
 		558C1BE03032C97D008B5056 /* iCloudSyncSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncSettings.swift; sourceTree = "<group>"; };
 		558C1BE23032C993008B5056 /* iCloudSyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncSettingsView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				553183C53044861900E228C5 /* BusinessCardImageProcessor.swift */,
 				553183CE3044898800E228C5 /* CalendarReminderSyncService.swift */,
 				553183D430448A4B00E228C5 /* AttachmentStorage.swift */,
+				557B038C3068204B008AEC30 /* MinimalZipWriter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 			files = (
 				558C1BE33032C993008B5056 /* iCloudSyncSettingsView.swift in Sources */,
 				C024DB92D6881EEB39FD3CD8 /* BizNoteApp.swift in Sources */,
+				557B038D3068204B008AEC30 /* MinimalZipWriter.swift in Sources */,
 				6F0B771081F4D600F2BBA9A7 /* BusinessCard.swift in Sources */,
 				0265DD2976FEDAAC2D6831F3 /* BusinessCardListView.swift in Sources */,
 				553183C63044861900E228C5 /* BusinessCardImageProcessor.swift in Sources */,
@@ -414,7 +418,7 @@
 				CODE_SIGN_ENTITLEMENTS = BizNote/BizNote.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8S2Y83DCGM;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BizNote/Info.plist;
@@ -565,7 +569,7 @@
 				CODE_SIGN_ENTITLEMENTS = BizNote/BizNote.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8S2Y83DCGM;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BizNote/Info.plist;

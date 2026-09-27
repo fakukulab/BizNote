@@ -23,6 +23,7 @@ struct MeetingMinutesTemplateSection: View {
     @Bindable var note: Note
     var onChange: () -> Void
     var onSearchLocation: (@escaping (String) -> Void) -> Void
+    var onPickContact: (@escaping (CNContact) -> Void) -> Void
 
     @State private var data: MeetingMinutesTemplateData
     @State private var participantInput: String = ""
@@ -31,18 +32,19 @@ struct MeetingMinutesTemplateSection: View {
     @State private var locationService = LocationService()
     @State private var isLocating: Bool = false
     @State private var locationError: String? = nil
-    @State private var showContactPicker = false
     @State private var showCardImporter = false
     @State private var deadlineOptions: [UUID: FollowUpDeadlineOption] = [:]
 
     init(
         note: Note,
         onChange: @escaping () -> Void,
-        onSearchLocation: @escaping (@escaping (String) -> Void) -> Void
+        onSearchLocation: @escaping (@escaping (String) -> Void) -> Void,
+        onPickContact: @escaping (@escaping (CNContact) -> Void) -> Void
     ) {
         self.note = note
         self.onChange = onChange
         self.onSearchLocation = onSearchLocation
+        self.onPickContact = onPickContact
         _data = State(initialValue: TemplateCoder.decode(MeetingMinutesTemplateData.self, from: note.templateData) ?? .init())
     }
 
@@ -59,18 +61,6 @@ struct MeetingMinutesTemplateSection: View {
             Section(String(localized: "template.meeting.location")) {
                 HStack {
                     TextField(String(localized: "template.meeting.location"), text: $data.location)
-                    Button {
-                        useCurrentLocation()
-                    } label: {
-                        if isLocating {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "location.fill")
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    .disabled(isLocating)
-                    .accessibilityLabel(String(localized: "template.meeting.useCurrentLocation"))
 
                     Button {
                         onSearchLocation { address in
@@ -99,7 +89,9 @@ struct MeetingMinutesTemplateSection: View {
                     TextField(String(localized: "template.meeting.participants"), text: $participantInput)
                     Spacer()
                     Button {
-                        showContactPicker = true
+                        onPickContact { contact in
+                            addParticipant(from: contact)
+                        }
                     } label: {
                         Image(systemName: "person.crop.circle.badge.magnifyingglass")
                     }
@@ -164,72 +156,7 @@ struct MeetingMinutesTemplateSection: View {
 
             Section(String(localized: "template.meeting.actions")) {
                 ForEach($data.actionItems) { $item in
-                    VStack(alignment: .leading, spacing: 10) {
-                        TextField(String(localized: "template.exhibition.taskTitle"), text: $item.task)
-                            .textFieldStyle(.roundedBorder)
-
-                        HStack(spacing: 8) {
-                            Menu {
-                                Text(String(localized: "note.category", defaultValue: "Category"))
-                                    .foregroundStyle(.secondary)
-                                    .disabled(true)
-                                Divider()
-                                ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.selectableCases) { category in
-                                    Button {
-                                        item.category = category
-                                    } label: {
-                                        Label(category.localizedName, systemImage: category.systemImage)
-                                    }
-                                }
-                            } label: {
-                                Label(item.category.localizedName, systemImage: item.category.systemImage)
-                            }
-
-                            Menu {
-                                Text(String(localized: "deadline.title", defaultValue: "Deadline"))
-                                    .foregroundStyle(.secondary)
-                                    .disabled(true)
-                                Divider()
-                                ForEach(FollowUpDeadlineOption.allCases) { option in
-                                    Button {
-                                        deadlineOptions[item.id] = option
-                                        applyDeadlineOption(option, to: $item.dueDate)
-                                    } label: {
-                                        Text(option.localizedName)
-                                    }
-                                }
-                            } label: {
-                                Label(
-                                    selectedDeadlineOption(for: item.id, dueDate: item.dueDate).localizedName,
-                                    systemImage: "calendar"
-                                )
-                            }
-
-                            if selectedDeadlineOption(for: item.id, dueDate: item.dueDate) == .custom {
-                                DatePicker(
-                                    String(localized: "template.exhibition.taskDueDate"),
-                                    selection: $item.dueDate,
-                                    displayedComponents: .date
-                                )
-                                .labelsHidden()
-                            } else {
-                                Text(shortDateString(for: item.dueDate))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            DatePicker(
-                                String(localized: "deadline.time", defaultValue: "Time"),
-                                selection: $item.dueDate,
-                                displayedComponents: .hourAndMinute
-                            )
-                            .labelsHidden()
-
-                            TextField(String(localized: "template.followUp.assignee"), text: assigneeBinding($item))
-                                .textFieldStyle(.roundedBorder)
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    MeetingActionRow(item: $item)
                 }
                 .onDelete { data.actionItems.remove(atOffsets: $0) }
 
@@ -241,12 +168,6 @@ struct MeetingMinutesTemplateSection: View {
             }
         }
         .onChange(of: data) { _, _ in save() }
-        .sheet(isPresented: $showContactPicker) {
-            ContactPickerView { contact in
-                addParticipant(from: contact)
-                showContactPicker = false
-            }
-        }
         .navigationDestination(isPresented: $showCardImporter) {
             BusinessCardImportPickerView { card in
                 addParticipant(from: card)
@@ -412,5 +333,126 @@ struct MeetingMinutesTemplateSection: View {
                 data.actionItems[index].reminderIdentifier = reminderID
             }
         }
+    }
+}
+
+private struct MeetingActionRow: View {
+    @Binding var item: MeetingMinutesTemplateData.ActionItem
+    @State private var showDetailEditor = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                TextField(String(localized: "template.exhibition.taskTitle"), text: $item.task)
+                    .textFieldStyle(.roundedBorder)
+
+                Button {
+                    showDetailEditor = true
+                } label: {
+                    Image(systemName: "info.circle")
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+            }
+
+            let summary = actionSummary
+            if !summary.isEmpty {
+                Text(summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 4)
+        .sheet(isPresented: $showDetailEditor) {
+            NavigationStack {
+                MeetingActionDetailEditor(item: $item) {
+                    item.isDetailConfigured = true
+                }
+            }
+        }
+    }
+
+    private var actionSummary: String {
+        guard item.isDetailConfigured else { return item.assignees.first ?? "" }
+        return [
+            item.category.localizedName,
+            detailDateString(for: item.dueDate),
+            detailTimeString(for: item.dueDate),
+            item.assignees.first ?? ""
+        ]
+        .filter { !$0.isEmpty }
+        .joined(separator: " · ")
+    }
+
+    private func detailDateString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
+    }
+
+    private func detailTimeString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}
+
+private struct MeetingActionDetailEditor: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var item: MeetingMinutesTemplateData.ActionItem
+    var onDone: () -> Void = {}
+
+    var body: some View {
+        Form {
+            Section(String(localized: "note.category", defaultValue: "Category")) {
+                Picker(String(localized: "note.category", defaultValue: "Category"), selection: $item.category) {
+                    ForEach(ExhibitionTemplateData.TaskItem.TaskCategory.selectableCases) { category in
+                        Label(category.localizedName, systemImage: category.systemImage)
+                            .tag(category)
+                    }
+                }
+            }
+
+            Section(String(localized: "deadline.title", defaultValue: "Deadline")) {
+                DatePicker(
+                    String(localized: "template.exhibition.taskDueDate"),
+                    selection: $item.dueDate,
+                    displayedComponents: .date
+                )
+                DatePicker(
+                    String(localized: "deadline.time", defaultValue: "Time"),
+                    selection: $item.dueDate,
+                    displayedComponents: .hourAndMinute
+                )
+            }
+
+            Section(String(localized: "template.followUp.assignee")) {
+                TextField(String(localized: "template.followUp.assignee"), text: assignee)
+            }
+        }
+        .navigationTitle(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(String(localized: "action.cancel")) {
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button(String(localized: "action.done")) {
+                    onDone()
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private var assignee: Binding<String> {
+        Binding(
+            get: { item.assignees.first ?? "" },
+            set: { item.assignees = $0.isEmpty ? [] : [$0] }
+        )
     }
 }

@@ -1343,6 +1343,23 @@
         }
       }
     },
+    "export.cardFormat" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Business Card File Format"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "명함 파일 형식"
+          }
+        }
+      }
+    },
     "export.dateRange" : {
       "localizations" : {
         "en" : {
@@ -1387,6 +1404,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "종료일"
+          }
+        }
+      }
+    },
+    "export.format.csv" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "CSV"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "CSV"
+          }
+        }
+      }
+    },
+    "export.format.xlsx" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Excel (XLSX)"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Excel (XLSX)"
           }
         }
       }
@@ -1581,6 +1632,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "사무실"
+          }
+        }
+      }
+    },
+    "export.header.phonetic" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Phonetic"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Phonetic"
           }
         }
       }
@@ -1805,6 +1873,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "위치 권한이 필요합니다."
+          }
+        }
+      }
+    },
+    "location.recent" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recent"
           }
         }
       }
@@ -3200,6 +3279,17 @@
         }
       }
     },
+    "template.exhibition.taskDetails" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Task Details"
+          }
+        }
+      }
+    },
     "template.exhibition.taskDueDate" : {
       "localizations" : {
         "en" : {
@@ -3536,6 +3626,17 @@
         }
       }
     },
+    "template.meeting.onlineMeetingLink" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Online Meeting Link"
+          }
+        }
+      }
+    },
     "template.meeting.participant.company" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3665,13 +3766,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Achievements"
+            "value" : "Completes"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "주요 성과"
+            "value" : "완료"
           }
         }
       }

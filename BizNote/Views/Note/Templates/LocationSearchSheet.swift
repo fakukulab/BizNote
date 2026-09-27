@@ -6,8 +6,13 @@ struct LocationSearchSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @StateObject private var completer = LocationSearchCompleter()
+    @AppStorage("locationSearch.recent") private var recentLocationsData: String = "[]"
     @State private var query: String = ""
     @State private var isResolving: Bool = false
+    @State private var isLocating: Bool = false
+    @State private var locationError: String?
+    @State private var onlineMeetingLink: String = ""
+    @State private var locationService = LocationService()
     @State private var selectedItem: MKMapItem?
     @State private var cameraPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
@@ -40,23 +45,76 @@ struct LocationSearchSheet: View {
     }
 
     private var searchListView: some View {
-        List(completer.results, id: \.title) { result in
-            Button {
-                resolve(result)
-            } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(result.title)
-                        .foregroundStyle(.primary)
-                    if !result.subtitle.isEmpty {
-                        Text(result.subtitle)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+        List {
+            Section {
+                TextField(String(localized: "template.meeting.searchLocationPlaceholder"), text: $query)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
+
+                Button {
+                    useCurrentLocation()
+                } label: {
+                    Label(String(localized: "template.meeting.useCurrentLocation"), systemImage: "location.fill")
+                }
+                .disabled(isLocating)
+
+                HStack {
+                    TextField(
+                        String(localized: "template.meeting.onlineMeetingLink", defaultValue: "Online Meeting Link"),
+                        text: $onlineMeetingLink
+                    )
+                    .keyboardType(.URL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                    Button {
+                        select(onlineMeetingLink)
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                    }
+                    .disabled(onlineMeetingLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+
+                if let locationError {
+                    Text(locationError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
+            if !recentLocations.isEmpty {
+                Section(String(localized: "location.recent", defaultValue: "Recent")) {
+                    ForEach(recentLocations, id: \.self) { location in
+                        Button {
+                            select(location)
+                        } label: {
+                            Text(location)
+                                .foregroundStyle(.primary)
+                        }
                     }
                 }
             }
-            .disabled(isResolving)
+
+            Section {
+                ForEach(completer.results, id: \.title) { result in
+                    Button {
+                        resolve(result)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(result.title)
+                                .foregroundStyle(.primary)
+                            if !result.subtitle.isEmpty {
+                                Text(result.subtitle)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .disabled(isResolving)
+                }
+            }
         }
-        .searchable(text: $query, prompt: Text(String(localized: "template.meeting.searchLocationPlaceholder")))
         .onChange(of: query) { _, newValue in
             completer.update(query: newValue)
         }
@@ -65,6 +123,10 @@ struct LocationSearchSheet: View {
                 ProgressView()
             }
         }
+    }
+
+    private var recentLocations: [String] {
+        (try? JSONDecoder().decode([String].self, from: Data(recentLocationsData.utf8))) ?? []
     }
 
     @ViewBuilder
@@ -89,14 +151,43 @@ struct LocationSearchSheet: View {
             .padding()
 
             Button {
-                onSelect(item.name ?? item.placemark.title ?? "")
-                dismiss()
+                select(item.name ?? item.placemark.title ?? "")
             } label: {
                 Text(String(localized: "template.meeting.useThisLocation"))
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .padding([.horizontal, .bottom])
+        }
+    }
+
+    private func select(_ value: String) {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        saveRecent(trimmed)
+        onSelect(trimmed)
+        dismiss()
+    }
+
+    private func saveRecent(_ value: String) {
+        var locations = recentLocations.filter { $0 != value }
+        locations.insert(value, at: 0)
+        locations = Array(locations.prefix(8))
+        guard let data = try? JSONEncoder().encode(locations),
+              let encoded = String(data: data, encoding: .utf8) else { return }
+        recentLocationsData = encoded
+    }
+
+    private func useCurrentLocation() {
+        isLocating = true
+        locationError = nil
+        Task {
+            do {
+                select(try await locationService.currentAddress())
+            } catch {
+                locationError = error.localizedDescription
+            }
+            isLocating = false
         }
     }
 

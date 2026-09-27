@@ -31,6 +31,7 @@ struct ExportView: View {
     @State private var useDateFilter: Bool = false
     @State private var startDate: Date = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
     @State private var endDate: Date = Date()
+    @AppStorage("export.cardFormat") private var cardFormatRaw: String = SpreadsheetFormat.csv.rawValue
 
     @State private var sharePayload: ExportSharePayload?
     @State private var errorMessage: String?
@@ -60,6 +61,18 @@ struct ExportView: View {
                 }
                 .pickerStyle(.menu)
                 .disabled(target == .businessCards)
+            }
+
+            if target != .notes {
+                Section(String(localized: "export.cardFormat", defaultValue: "명함 파일 형식")) {
+                    Picker(String(localized: "export.cardFormat", defaultValue: "명함 파일 형식"),
+                           selection: $cardFormatRaw) {
+                        ForEach(SpreadsheetFormat.allCases) { format in
+                            Text(format.localizedName).tag(format.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
             }
 
             Section(String(localized: "export.dateRange")) {
@@ -133,7 +146,8 @@ struct ExportView: View {
             }
             if target == .businessCards || target == .all {
                 if !filteredCards.isEmpty {
-                    let url = try service.exportBusinessCards(filteredCards)
+                    let format = SpreadsheetFormat(rawValue: cardFormatRaw) ?? .csv
+                    let url = try service.exportBusinessCards(filteredCards, format: format)
                     urls.append(url)
                 }
             }

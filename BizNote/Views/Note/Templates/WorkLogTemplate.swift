@@ -57,13 +57,14 @@ struct WorkLogTemplateSection: View {
             Section(String(localized: "template.workLog.items")) {
                 ForEach($data.workItems) { $item in
                     VStack(alignment: .leading, spacing: 16) {
-                        TextField(String(localized: "template.workLog.itemPlaceholder"), text: $item.task)
                         Picker(String(localized: "task.status.todo"), selection: $item.status) {
                             ForEach(WorkLogTemplateData.WorkItem.TaskStatus.allCases) { s in
                                 Text(s.localizedName).tag(s)
                             }
                         }
                         .pickerStyle(.segmented)
+
+                        TextField(String(localized: "template.workLog.itemPlaceholder"), text: $item.task)
                     }
                     .padding(.vertical, 10)
                 }

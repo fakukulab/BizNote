@@ -94,12 +94,13 @@ struct MeetingMinutesTemplateData: Codable, Equatable {
         var assignees: [String] = []
         var dueDate: Date = Date()
         var isCompleted: Bool = false
+        var isDetailConfigured: Bool = false
         var reminderIdentifier: String? = nil
 
         init() {}
 
         enum CodingKeys: String, CodingKey {
-            case id, task, detail, category, assignees, dueDate, isCompleted, reminderIdentifier
+            case id, task, detail, category, assignees, dueDate, isCompleted, isDetailConfigured, reminderIdentifier
         }
 
         init(from decoder: Decoder) throws {
@@ -112,6 +113,7 @@ struct MeetingMinutesTemplateData: Codable, Equatable {
             assignees = (try? c.decode([String].self, forKey: .assignees)) ?? []
             dueDate = (try? c.decode(Date.self, forKey: .dueDate)) ?? Date()
             isCompleted = (try? c.decode(Bool.self, forKey: .isCompleted)) ?? false
+            isDetailConfigured = (try? c.decode(Bool.self, forKey: .isDetailConfigured)) ?? !assignees.isEmpty
             reminderIdentifier = try? c.decodeIfPresent(String.self, forKey: .reminderIdentifier)
         }
     }
@@ -225,12 +227,13 @@ struct ExhibitionTemplateData: Codable, Equatable {
         var assignees: [String] = []
         var dueDate: Date = Date()
         var isCompleted: Bool = false
+        var isDetailConfigured: Bool = false
         var reminderIdentifier: String? = nil
 
         init() {}
 
         enum CodingKeys: String, CodingKey {
-            case id, title, detail, category, assignees, dueDate, isCompleted, reminderIdentifier
+            case id, title, detail, category, assignees, dueDate, isCompleted, isDetailConfigured, reminderIdentifier
         }
 
         init(from decoder: Decoder) throws {
@@ -243,6 +246,7 @@ struct ExhibitionTemplateData: Codable, Equatable {
             assignees = (try? c.decode([String].self, forKey: .assignees)) ?? []
             dueDate = (try? c.decode(Date.self, forKey: .dueDate)) ?? Date()
             isCompleted = (try? c.decode(Bool.self, forKey: .isCompleted)) ?? false
+            isDetailConfigured = (try? c.decode(Bool.self, forKey: .isDetailConfigured)) ?? !assignees.isEmpty
             reminderIdentifier = try? c.decodeIfPresent(String.self, forKey: .reminderIdentifier)
         }
 

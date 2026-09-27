@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Contacts
 
 struct NoteDetailView: View {
     @Bindable var note: Note
@@ -9,9 +10,16 @@ struct NoteDetailView: View {
 
     @State private var cardScannerRequest: NoteCardScannerRequest?
     @State private var locationSearchRequest: LocationSearchRequest?
+    @State private var contactPickerRequest: ContactPickerRequest?
     @State private var exhibitionPresetRequest: ExhibitionPresetRequest?
     @State private var selectedBusinessCardID: UUID?
     @State private var isReadyForSheets: Bool = false
+    @State private var isEditing: Bool
+
+    init(note: Note) {
+        self.note = note
+        _isEditing = State(initialValue: Date().timeIntervalSince(note.createdAt) < 5)
+    }
 
     var body: some View {
         Form {
@@ -50,14 +58,17 @@ struct NoteDetailView: View {
                     set: { note.isFavorite = $0; touch() }
                 ))
             }
+            .disabled(!isEditing)
 
             categoryTemplateSection()
+                .disabled(!isEditing)
 
             Section(String(localized: "note.content")) {
                 TextEditor(text: $note.content)
                     .frame(minHeight: editorHeight(for: note.content, minimumLines: 3))
                     .onChange(of: note.content) { _, _ in touch() }
             }
+            .disabled(!isEditing)
 
             businessCardsSection()
 
@@ -65,18 +76,33 @@ struct NoteDetailView: View {
                 TagEditorView(tags: $note.tags)
                     .onChange(of: note.tags) { _, _ in touch() }
             }
+            .disabled(!isEditing)
         }
         .navigationTitle(note.title.isEmpty ? String(localized: "action.newNote") : note.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if !(note.categorySelection == .builtin(.workLog)) {
-                ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .primaryAction) {
+                if isEditing && !(note.categorySelection == .builtin(.workLog)) {
                     Button {
                         guard isReadyForSheets else { return }
                         cardScannerRequest = NoteCardScannerRequest()
                     } label: {
                         Label(String(localized: "action.scanCard"), systemImage: "camera.viewfinder")
                     }
+                }
+
+                Button {
+                    if isEditing {
+                        try? context.save()
+                        isEditing = false
+                    } else {
+                        isEditing = true
+                    }
+                } label: {
+                    Label(
+                        isEditing ? String(localized: "action.done") : String(localized: "action.edit"),
+                        systemImage: isEditing ? "checkmark" : "pencil"
+                    )
                 }
             }
         }
@@ -102,6 +128,12 @@ struct NoteDetailView: View {
                     request.onSelect(address)
                     locationSearchRequest = nil
                 }
+            }
+        }
+        .sheet(item: $contactPickerRequest) { request in
+            ContactPickerView { contact in
+                request.onSelect(contact)
+                contactPickerRequest = nil
             }
         }
         .sheet(item: $exhibitionPresetRequest) { request in
@@ -139,6 +171,9 @@ struct NoteDetailView: View {
             case .meetingMinutes:
                 MeetingMinutesTemplateSection(note: note, onChange: touch) { onSelect in
                     locationSearchRequest = LocationSearchRequest(onSelect: onSelect)
+                } onPickContact: { onSelect in
+                    guard isReadyForSheets else { return }
+                    contactPickerRequest = ContactPickerRequest(onSelect: onSelect)
                 }
             case .exhibition:
                 ExhibitionTemplateSection(note: note, onChange: touch) { onSelect in
@@ -234,6 +269,11 @@ private struct NoteCardScannerRequest: Identifiable {
 private struct LocationSearchRequest: Identifiable {
     let id = UUID()
     var onSelect: (String) -> Void
+}
+
+private struct ContactPickerRequest: Identifiable {
+    let id = UUID()
+    var onSelect: (CNContact) -> Void
 }
 
 private struct ExhibitionPresetRequest: Identifiable {
