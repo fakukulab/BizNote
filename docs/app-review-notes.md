@@ -33,7 +33,9 @@ If enabled by the user, iCloud sync uses the user's personal iCloud account and 
 
 The developer does not operate a separate server for collecting user data from the app.
 
-The app does not include advertising SDKs, analytics SDKs, tracking SDKs, or third-party dependencies.
+The app includes the Google Mobile Ads SDK (AdMob) and Google's User Messaging Platform SDK. Ads are requested as non-personalized and the app does not use App Tracking Transparency. The app does not include any other analytics or tracking SDKs.
+
+Ads appear as a banner at the bottom of the note screen, and as a full-screen ad when entering Event Mode (iPad), importing a promotional video in Event Mode, and exporting the visitor list. Ads never block the underlying action if no ad is available.
 
 ## Permission Usage
 

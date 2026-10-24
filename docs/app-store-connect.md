@@ -40,7 +40,7 @@ BizNote helps you manage business notes, meeting minutes, event notes, work logs
 
 Create notes by type, customize note templates, scan business cards with on-device OCR, and keep important contact details organized. You can also record meeting locations, manage event information, attach images, and export supported data through the system share sheet.
 
-BizNote does not require an account, does not include ads, and does not track users. Data is stored on your device, and iCloud sync is available through your personal iCloud account when enabled.
+BizNote does not require an account and shows non-personalized ads. It does not track users across apps or websites. Data is stored on your device, and iCloud sync is available through your personal iCloud account when enabled.
 
 ## Keywords
 
@@ -66,25 +66,30 @@ BizNote is an iOS and iPadOS business note app. All core features are available 
 
 The reviewer can create notes from the note list, choose a note type, scan or import a business card image, review OCR results, save business card information, optionally save it to Contacts, use location input for meeting or event notes, review iCloud/Calendar/Reminders settings, and export supported data through the system share sheet.
 
-The app does not contain ads, analytics SDKs, tracking SDKs, subscriptions, in-app purchases, or external payment.
+The app contains ads from Google AdMob (non-personalized, no App Tracking Transparency prompt). It does not contain other analytics SDKs, tracking SDKs, subscriptions, in-app purchases, or external payment.
 
 User data is stored on the device. If iCloud sync is enabled, data may sync through the user's personal iCloud account using Apple's CloudKit service. The developer does not operate a separate server for collecting user data from the app.
 
 ## App Privacy Answers
 
-Tracking: No
+Tracking: No (ads are requested as non-personalized and the app does not use App Tracking Transparency). Re-confirm this against Google's current Mobile Ads SDK data disclosure guide before submitting, because Google lists some SDK data types as tracking by default.
 
-Data used to track users: No
+Data used to track users: No (see above)
 
-Third-party advertising: No
+Third-party advertising: Yes (Google AdMob, non-personalized)
 
 Developer advertising or marketing: No
 
-Analytics: No
+Analytics: No developer analytics. The Google Mobile Ads SDK collects performance and crash diagnostics.
 
 Product personalization: No
 
 Data linked to the user: No developer server collection. User-created data is stored locally and may sync through the user's personal iCloud account if enabled.
+
+Data collected by the Google Mobile Ads SDK (not by the developer), per Google's data disclosure guide:
+
+- Device ID, Advertising Data, Product Interaction, Performance Data: linked to the user per Google's guidance; purposes are Third-Party Advertising and Analytics.
+- Crash Data: not linked to the user; purpose is Analytics.
 
 Data not linked to the user: None collected by the developer.
 

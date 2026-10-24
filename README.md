@@ -48,4 +48,4 @@ Release notes are kept at the repository root as `ReleaseNotes-*.md`.
 ## Notes
 
 - Signing certificates and provisioning profiles (`*.cer`, `*.mobileprovision`, `*.certSigningRequest`) must not be committed. Keep them outside this repository.
-- BizNote does not require login, does not include advertising SDKs, and does not track users.
+- BizNote does not require login. It shows non-personalized Google AdMob ads and does not track users across apps or websites.

@@ -17,7 +17,7 @@ BizNote is an iOS and iPadOS business note app for creating work logs, meeting m
 
 ## Privacy
 
-BizNote does not require login, does not include advertising SDKs, and does not track users.
+BizNote does not require login. It shows non-personalized ads from Google AdMob and does not track users across apps or websites.
 
 User data is stored on the device. If iCloud sync is enabled, data may sync through the user's personal iCloud account using Apple's CloudKit service.
 
