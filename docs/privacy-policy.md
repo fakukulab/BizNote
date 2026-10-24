@@ -5,7 +5,7 @@ permalink: /privacy-policy/
 
 # BizNote Privacy Policy
 
-Effective date: 2026-10-24
+Effective date: 2026-10-25
 
 BizNote is a business note and business card management app. The app does not require account registration or login.
 
@@ -41,7 +41,11 @@ Advertising-related data processed by Google is described in the Advertising and
 
 BizNote shows ads provided by Google AdMob using the Google Mobile Ads SDK. A banner ad may appear at the bottom of the note screen, and a full-screen ad may appear when the user enters Event Mode, imports a promotional video in Event Mode, or exports the visitor list.
 
-BizNote requests non-personalized ads only. BizNote does not request App Tracking Transparency permission, does not use ad personalization, and does not track users across apps or websites for advertising.
+BizNote asks for your permission through Apple's App Tracking Transparency prompt before the advertising identifier of your device can be used for ads. BizNote requests non-personalized ads only and does not use ad personalization, whether or not you allow tracking.
+
+If you allow it, the Google Mobile Ads SDK may use your device's advertising identifier to deliver and measure ads and to limit how often they are shown. Apple's App Privacy information describes this as data used for tracking. If you do not allow it, ads are still shown, and all features of the app work the same.
+
+You can change this choice at any time in iOS Settings under Privacy & Security > Tracking.
 
 To deliver ads, limit how often they appear, prevent fraud, and measure ad performance, Google may collect and process device and ad-related information such as the IP address, device identifiers, ad interactions, and performance and crash diagnostics. This information is collected by Google, not by the developer.
 

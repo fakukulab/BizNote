@@ -32,7 +32,7 @@ Recommended initial values:
 - Price: Free
 - Sign-in required: No
 - Encryption: Uses only standard Apple platform encryption, no non-exempt custom encryption
-- Tracking: No (non-personalized ads, no ATT; see docs/app-store-connect.md for the App Privacy answers)
+- Tracking: Device ID is declared as used for tracking and the app shows the App Tracking Transparency prompt, following the Google Mobile Ads SDK's own privacy manifest (see docs/app-store-connect.md)
 
 ## Validation Before Archive
 
@@ -71,7 +71,7 @@ Before upload, install a Release build on a real device and check:
 - Xcode MCP Debug build succeeded.
 - App icon is `1024x1024` and has no alpha channel.
 - `PrivacyInfo.xcprivacy` is included as a target resource.
-- `PrivacyInfo.xcprivacy` declares no tracking, the UserDefaults required reason API reason `CA92.1`, and the data types collected by the Google Mobile Ads SDK.
+- `PrivacyInfo.xcprivacy` mirrors the Google Mobile Ads SDK's data declarations (Device ID flagged as tracking), the UserDefaults required reason API reason `CA92.1`, and the data types collected by the Google Mobile Ads SDK.
 - Local Release `xcodebuild` on this Mac failed because the installed Xcode beta could not load SwiftUI/SwiftData macro implementations. Treat that as an environment issue unless the stable-Xcode build reproduces it.
 
 ## Do Not Regenerate Carelessly
