@@ -19,3 +19,12 @@ Package.resolved
 
 ## macOS
 .DS_Store
+
+## Signing material (never commit; see README)
+*.mobileprovision
+*.cer
+*.certSigningRequest
+*.p12
+
+## Generated release archives
+ReleaseNotes-*.zip
