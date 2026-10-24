@@ -1986,6 +1986,22 @@
         }
       }
     },
+    "eventMode.export.format" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Format"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 형식"
+          }
+        }
+      }
+    },
     "eventMode.export.includeCardImages" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -2719,16 +2735,16 @@
     "eventMode.list.filter" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "필터"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filter"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "필터"
           }
         }
       }
@@ -2736,16 +2752,16 @@
     "eventMode.list.materialsNotRequested" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "자료 요청 안 함"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Materials not requested"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "자료 요청 안 함"
           }
         }
       }
@@ -2753,16 +2769,16 @@
     "eventMode.list.materialsRequested" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "자료 요청함"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Materials requested"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "자료 요청함"
           }
         }
       }
@@ -2770,16 +2786,16 @@
     "eventMode.list.noFilterResults" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "필터 조건에 맞는 방문객이 없습니다"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No visitors match the filter"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "필터 조건에 맞는 방문객이 없습니다"
           }
         }
       }
@@ -3266,16 +3282,16 @@
     "eventMode.settings.dataReset" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "데이터 초기화"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset Data"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "데이터 초기화"
           }
         }
       }
@@ -3436,16 +3452,16 @@
     "eventMode.settings.resetVisitors" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "방문객 목록 초기화"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset Visitor List"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "방문객 목록 초기화"
           }
         }
       }
@@ -3453,16 +3469,16 @@
     "eventMode.settings.resetVisitors.all" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "모든 행사의 방문객 목록 삭제"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete visitor lists for all events"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "모든 행사의 방문객 목록 삭제"
           }
         }
       }
@@ -3470,16 +3486,16 @@
     "eventMode.settings.resetVisitors.byEvent" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "행사별로 삭제"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete by Event"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "행사별로 삭제"
           }
         }
       }
@@ -3487,16 +3503,16 @@
     "eventMode.settings.resetVisitors.confirmAll" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "모든 행사의 방문객 %lld명이 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All %lld visitors across all events will be deleted. This action cannot be undone."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "모든 행사의 방문객 %lld명이 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
           }
         }
       }
@@ -3504,16 +3520,16 @@
     "eventMode.settings.resetVisitors.confirmEvent" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "'%1$@'의 방문객 %2$lld명이 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All %2$lld visitors of '%1$@' will be deleted. This action cannot be undone."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "'%1$@'의 방문객 %2$lld명이 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
           }
         }
       }
@@ -3521,16 +3537,16 @@
     "eventMode.settings.resetVisitors.confirmTitle" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "방문객 목록을 삭제할까요?"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete the visitor list?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "방문객 목록을 삭제할까요?"
           }
         }
       }
@@ -3538,16 +3554,16 @@
     "eventMode.settings.resetVisitors.footer" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "행사 모드에서 수집한 방문객 정보만 삭제됩니다. 저장된 행사 정보, 일반 노트, 명함 데이터에는 영향을 주지 않습니다."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Only visitor information collected in Event Mode is deleted. Saved events, regular notes, and business card data are not affected."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "행사 모드에서 수집한 방문객 정보만 삭제됩니다. 저장된 행사 정보, 일반 노트, 명함 데이터에는 영향을 주지 않습니다."
           }
         }
       }
@@ -3657,16 +3673,16 @@
     "eventMode.settings.video.importFailedTitle" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "가져오기 실패"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Failed"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "가져오기 실패"
           }
         }
       }
@@ -3691,16 +3707,16 @@
     "eventMode.staff.unlock" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "담당자 잠금 해제"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unlock staff screen"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "담당자 잠금 해제"
           }
         }
       }
@@ -4302,6 +4318,12 @@
     "export.format.pdf" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF (one page per card)"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",

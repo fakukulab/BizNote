@@ -14,6 +14,7 @@ struct EventModeRadioRow: View {
                     .foregroundStyle(isSelected ? Color.accentColor : .primary)
                 Spacer()
             }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

@@ -36,8 +36,8 @@ struct EventModeExportView: View {
                 .labelsHidden()
             }
 
-            Section(String(localized: "export.cardFormat", defaultValue: "파일 형식")) {
-                Picker(String(localized: "export.cardFormat", defaultValue: "파일 형식"), selection: $format) {
+            Section(String(localized: "eventMode.export.format", defaultValue: "파일 형식")) {
+                Picker(String(localized: "eventMode.export.format", defaultValue: "파일 형식"), selection: $format) {
                     ForEach(SpreadsheetFormat.allCases) { format in
                         Text(format.localizedName).tag(format)
                     }

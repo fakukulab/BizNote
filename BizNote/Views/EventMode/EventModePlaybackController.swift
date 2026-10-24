@@ -11,6 +11,7 @@ final class EventModePlaybackController {
 
     private var filenames: [String] = []
     private var endObserver: NSObjectProtocol?
+    private var isAudioSessionActive = false
 
     func configure(filenames: [String]) {
         guard filenames != self.filenames else { return }
@@ -34,8 +35,19 @@ final class EventModePlaybackController {
         let muted = EventModeSettings.isPromoVideoMuted
         player.isMuted = muted
         guard !muted else { return }
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
-        try? AVAudioSession.sharedInstance().setActive(true)
+        activateAudioSession()
+    }
+
+    /// `AVAudioSession.setActive(_:)` can block while the system arbitrates
+    /// audio routing, so it must not run on the main thread.
+    private func activateAudioSession() {
+        guard !isAudioSessionActive else { return }
+        isAudioSessionActive = true
+        Task.detached(priority: .userInitiated) {
+            let session = AVAudioSession.sharedInstance()
+            try? session.setCategory(.playback, mode: .moviePlayback)
+            try? session.setActive(true)
+        }
     }
 
     func pause() {
