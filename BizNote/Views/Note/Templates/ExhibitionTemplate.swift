@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import Contacts
 
 private enum ExhibitionDeadlineOption: String, CaseIterable, Identifiable {
     case today
@@ -24,6 +25,7 @@ struct ExhibitionTemplateSection: View {
     @Bindable var note: Note
     var onChange: () -> Void
     var onPickPreset: (@escaping (ExhibitionPreset) -> Void) -> Void
+    var onPickContact: (@escaping (CNContact) -> Void) -> Void
 
     @Query(sort: \ExhibitionPreset.createdAt, order: .reverse)
     private var presets: [ExhibitionPreset]
@@ -36,11 +38,13 @@ struct ExhibitionTemplateSection: View {
     init(
         note: Note,
         onChange: @escaping () -> Void,
-        onPickPreset: @escaping (@escaping (ExhibitionPreset) -> Void) -> Void
+        onPickPreset: @escaping (@escaping (ExhibitionPreset) -> Void) -> Void,
+        onPickContact: @escaping (@escaping (CNContact) -> Void) -> Void
     ) {
         self.note = note
         self.onChange = onChange
         self.onPickPreset = onPickPreset
+        self.onPickContact = onPickContact
         _data = State(initialValue: TemplateCoder.decode(ExhibitionTemplateData.self, from: note.templateData) ?? .init())
     }
 
@@ -109,6 +113,13 @@ struct ExhibitionTemplateSection: View {
                 VisitedBoothRow(booth: $booth) {
                     cardImportTarget = .booth(booth.id)
                     showCardImporter = true
+                } onImportContact: {
+                    let target = ExhibitionCardImportTarget.booth(booth.id)
+                    cardImportTarget = target
+                    onPickContact { contact in
+                        applyContact(contact, to: target)
+                        cardImportTarget = nil
+                    }
                 }
             }
             .onDelete { data.visitedBooths.remove(atOffsets: $0) }
@@ -128,6 +139,13 @@ struct ExhibitionTemplateSection: View {
                 ContactRow(contact: $contact) {
                     cardImportTarget = .contact(contact.id)
                     showCardImporter = true
+                } onImportContact: {
+                    let target = ExhibitionCardImportTarget.contact(contact.id)
+                    cardImportTarget = target
+                    onPickContact { contact in
+                        applyContact(contact, to: target)
+                        cardImportTarget = nil
+                    }
                 }
             }
             .onDelete { data.contacts.remove(atOffsets: $0) }
@@ -187,6 +205,25 @@ struct ExhibitionTemplateSection: View {
             data.contacts[index].email = card.email
             data.contacts[index].phone = card.phone.isEmpty ? card.officePhone : card.phone
             data.contacts[index].linkedCardID = card.id
+        }
+    }
+
+    private func applyContact(_ contact: CNContact, to target: ExhibitionCardImportTarget) {
+        switch target {
+        case .booth(let id):
+            guard let index = data.visitedBooths.firstIndex(where: { $0.id == id }) else { return }
+            data.visitedBooths[index].companyName = contact.organizationName
+            data.visitedBooths[index].contactPerson = contact.displayName
+            data.visitedBooths[index].jobTitle = contact.jobTitle
+            data.visitedBooths[index].contactEmail = contact.emailAddresses.first.map { String($0.value) } ?? ""
+            data.visitedBooths[index].contactPhone = contact.phoneNumbers.first?.value.stringValue ?? ""
+        case .contact(let id):
+            guard let index = data.contacts.firstIndex(where: { $0.id == id }) else { return }
+            data.contacts[index].name = contact.displayName
+            data.contacts[index].company = contact.organizationName
+            data.contacts[index].jobTitle = contact.jobTitle
+            data.contacts[index].email = contact.emailAddresses.first.map { String($0.value) } ?? ""
+            data.contacts[index].phone = contact.phoneNumbers.first?.value.stringValue ?? ""
         }
     }
 
@@ -317,15 +354,15 @@ private struct ExhibitionTaskRow: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 TextField(String(localized: "template.exhibition.taskTitle"), text: $task.title)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.plain)
 
                 Button {
                     showDetailEditor = true
                 } label: {
-                    Image(systemName: "info.circle")
+                    Label(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"), systemImage: "info.circle")
                 }
                 .buttonStyle(.borderless)
-                .accessibilityLabel(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+                .labelStyle(.iconOnly)
             }
 
             let summary = taskSummary
@@ -585,46 +622,54 @@ struct BusinessCardImportPickerView: View {
 private struct VisitedBoothRow: View {
     @Binding var booth: ExhibitionTemplateData.VisitedBooth
     var onImportCard: () -> Void
+    var onImportContact: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             TextField(String(localized: "businessCard.company"), text: $booth.companyName)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.name"), text: $booth.contactPerson)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.jobTitle"), text: $booth.jobTitle)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.email"), text: $booth.contactEmail)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
                 .keyboardType(.emailAddress)
                 .textInputAutocapitalization(.never)
+            FieldSeparator()
             TextField(String(localized: "businessCard.phone"), text: $booth.contactPhone)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
                 .keyboardType(.phonePad)
+            FieldSeparator()
             TextField(String(localized: "template.exhibition.productsServices"),
                       text: $booth.productsServices, axis: .vertical)
                 .lineLimit(1...3)
-                .textFieldStyle(.roundedBorder)
-            VStack(alignment: .leading, spacing: 4) {
+                .exhibitionFieldStyle()
+            FieldSeparator()
+            VStack(alignment: .leading, spacing: 6) {
                 Text(String(localized: "businessCard.memo"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .exhibitionLabelStyle()
                 TextEditor(text: $booth.notes)
                     .frame(minHeight: editorHeight(for: booth.notes))
-                    .padding(4)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(.quaternary)
-                    )
+                    .font(.body)
+                    .foregroundStyle(.primary)
             }
+            .padding(.vertical, 8)
 
-            Button {
-                onImportCard()
+            Menu {
+                Button(String(localized: "businessCard.importFromCard")) {
+                    onImportCard()
+                }
+                Button(String(localized: "contacts.import", defaultValue: "연락처에서 불러오기")) {
+                    onImportContact()
+                }
             } label: {
-                Label(String(localized: "businessCard.importFromCard"), systemImage: "person.crop.rectangle")
-                    .font(.caption)
+                Label(String(localized: "businessCard.importFromCard"), systemImage: "person.crop.circle.badge.plus")
             }
-            .buttonStyle(.bordered)
+            .labelStyle(.iconOnly)
         }
         .padding(.vertical, 6)
     }
@@ -638,6 +683,7 @@ private struct VisitedBoothRow: View {
 private struct ContactRow: View {
     @Binding var contact: ExhibitionTemplateData.Contact
     var onImportCard: () -> Void
+    var onImportContact: () -> Void
 
     private static let countryNames: [String] = {
         let locale = Locale.current
@@ -648,7 +694,7 @@ private struct ContactRow: View {
     }()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             Menu {
                 ForEach(Self.countryNames, id: \.self) { country in
                     Button {
@@ -668,46 +714,50 @@ private struct ContactRow: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal, 10)
+                .font(.body)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(.quaternary)
-                )
             }
+            FieldSeparator()
             TextField(String(localized: "businessCard.company"), text: $contact.company)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.name"), text: $contact.name)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.jobTitle"), text: $contact.jobTitle)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
+            FieldSeparator()
             TextField(String(localized: "businessCard.email"), text: $contact.email)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
                 .keyboardType(.emailAddress)
                 .textInputAutocapitalization(.never)
+            FieldSeparator()
             TextField(String(localized: "businessCard.phone"), text: $contact.phone)
-                .textFieldStyle(.roundedBorder)
+                .exhibitionFieldStyle()
                 .keyboardType(.phonePad)
-            VStack(alignment: .leading, spacing: 4) {
+            FieldSeparator()
+            VStack(alignment: .leading, spacing: 6) {
                 Text(String(localized: "businessCard.memo"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .exhibitionLabelStyle()
                 TextEditor(text: $contact.memo)
                     .frame(minHeight: editorHeight(for: contact.memo))
-                    .padding(4)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(.quaternary)
-                    )
+                    .font(.body)
+                    .foregroundStyle(.primary)
             }
+            .padding(.vertical, 8)
 
-            Button {
-                onImportCard()
+            Menu {
+                Button(String(localized: "businessCard.importFromCard")) {
+                    onImportCard()
+                }
+                Button(String(localized: "contacts.import", defaultValue: "연락처에서 불러오기")) {
+                    onImportContact()
+                }
             } label: {
-                Label(String(localized: "businessCard.importFromCard"), systemImage: "person.crop.rectangle")
-                    .font(.caption)
+                Label(String(localized: "businessCard.importFromCard"), systemImage: "person.crop.circle.badge.plus")
             }
-            .buttonStyle(.bordered)
+            .labelStyle(.iconOnly)
         }
         .padding(.vertical, 6)
     }
@@ -715,6 +765,33 @@ private struct ContactRow: View {
     private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
         let lineCount = max(minimumLines, text.split(separator: "\n", omittingEmptySubsequences: false).count)
         return CGFloat(lineCount) * 22 + 24
+    }
+}
+
+private struct FieldSeparator: View {
+    var body: some View {
+        Rectangle()
+            .fill(.quaternary)
+            .frame(maxWidth: .infinity)
+            .frame(height: 1)
+    }
+}
+
+private extension View {
+    func exhibitionFieldStyle() -> some View {
+        textFieldStyle(.plain)
+            .font(.body)
+            .foregroundStyle(.primary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 8)
+    }
+}
+
+private extension Text {
+    func exhibitionLabelStyle() -> some View {
+        font(.body)
+            .foregroundStyle(.primary)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -734,9 +811,6 @@ struct ExhibitionPresetEditor: View {
     @State private var supervisor: String = ""
     @State private var contact: String = ""
     @State private var homepage: String = ""
-    @State private var locationService = LocationService()
-    @State private var isLocating = false
-    @State private var locationError: String?
     @State private var showLocationSearch = false
 
     private func editorHeight(for text: String, minimumLines: Int = 2) -> CGFloat {
@@ -762,31 +836,12 @@ struct ExhibitionPresetEditor: View {
                     TextField(String(localized: "exhibitionPreset.venue"), text: $venue)
 
                     Button {
-                        useCurrentLocation()
-                    } label: {
-                        if isLocating {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "location.fill")
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    .disabled(isLocating)
-                    .accessibilityLabel(String(localized: "template.meeting.useCurrentLocation"))
-
-                    Button {
                         showLocationSearch = true
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
                     .buttonStyle(.borderless)
                     .accessibilityLabel(String(localized: "template.meeting.searchLocation"))
-                }
-
-                if let locationError {
-                    Text(locationError)
-                        .font(.caption)
-                        .foregroundStyle(.red)
                 }
             }
             Section(String(localized: "exhibitions.introduction", defaultValue: "Event Introduction")) {
@@ -861,19 +916,6 @@ struct ExhibitionPresetEditor: View {
                 contact = preset.contact
                 homepage = preset.homepage
             }
-        }
-    }
-
-    private func useCurrentLocation() {
-        isLocating = true
-        locationError = nil
-        Task {
-            do {
-                venue = try await locationService.currentAddress()
-            } catch {
-                locationError = error.localizedDescription
-            }
-            isLocating = false
         }
     }
 }

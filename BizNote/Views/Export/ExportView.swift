@@ -183,26 +183,25 @@ struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        // On iPad, UIActivityViewController is always presented as a popover;
-        // without an anchor it fails to show (or silently no-ops on some
-        // actions like "Save to Files") even though we present it modally.
-        if let popover = controller.popoverPresentationController {
-            let keyWindow = UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
-                .first { $0.isKeyWindow }
-            popover.sourceView = keyWindow
-            popover.sourceRect = CGRect(
-                x: (keyWindow?.bounds.midX) ?? 0,
-                y: (keyWindow?.bounds.midY) ?? 0,
-                width: 0,
-                height: 0
-            )
-            popover.permittedArrowDirections = []
-        }
+        let controller = AnchoredActivityViewController(activityItems: items, applicationActivities: nil)
+        controller.popoverPresentationController?.permittedArrowDirections = []
         return controller
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+/// On iPad, UIActivityViewController is always presented as a popover;
+/// without an anchor it fails to show (or silently no-ops on some
+/// actions like "Save to Files") even though we present it modally.
+/// The anchor is the controller's own view, so it follows the scene's
+/// current size (split view, Stage Manager, foldable) instead of a global key window.
+private final class AnchoredActivityViewController: UIActivityViewController {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let popover = popoverPresentationController else { return }
+        let anchorView = presentingViewController?.view ?? view
+        popover.sourceView = anchorView
+        popover.sourceRect = CGRect(x: anchorView?.bounds.midX ?? 0, y: anchorView?.bounds.midY ?? 0, width: 0, height: 0)
+    }
 }

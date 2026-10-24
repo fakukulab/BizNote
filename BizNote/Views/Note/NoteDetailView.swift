@@ -18,8 +18,7 @@ struct NoteDetailView: View {
 
     init(note: Note) {
         self.note = note
-        _isEditing = State(initialValue: Date().timeIntervalSince(note.createdAt) < 5)
-    }
+        _isEditing = State(initialValue: Date().timeIntervalSince(note.createdAt) < 5)    }
 
     var body: some View {
         Form {
@@ -50,7 +49,7 @@ struct NoteDetailView: View {
                 }
 
                 TextField(String(localized: "note.title"), text: $note.title)
-                    .font(.title3)
+                    .font(.body)
                     .onChange(of: note.title) { _, _ in touch() }
 
                 Toggle(String(localized: "note.favorite"), isOn: Binding(
@@ -64,9 +63,14 @@ struct NoteDetailView: View {
                 .disabled(!isEditing)
 
             Section(String(localized: "note.content")) {
-                TextEditor(text: $note.content)
-                    .frame(minHeight: editorHeight(for: note.content, minimumLines: 3))
-                    .onChange(of: note.content) { _, _ in touch() }
+                RichTextEditor(
+                    text: Binding(
+                        get: { note.content },
+                        set: { note.content = $0; touch() }
+                    ),
+                    rtfData: memoRTFBinding
+                )
+                .frame(minHeight: editorHeight(for: note.content, minimumLines: 5) + 44)
             }
             .disabled(!isEditing)
 
@@ -77,6 +81,9 @@ struct NoteDetailView: View {
                     .onChange(of: note.tags) { _, _ in touch() }
             }
             .disabled(!isEditing)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            AdBannerView()
         }
         .navigationTitle(note.title.isEmpty ? String(localized: "action.newNote") : note.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -107,15 +114,17 @@ struct NoteDetailView: View {
             }
         }
         .sheet(item: $cardScannerRequest) { _ in
-            BusinessCardScanFlow {
-                let card = $0.makeBusinessCard()
-                context.insert(card)
-                card.note = note
+            BusinessCardScanFlow { drafts in
                 var cards = note.businessCards ?? []
-                if !cards.contains(where: { $0.id == card.id }) {
-                    cards.append(card)
-                    note.businessCards = cards
+                for draft in drafts {
+                    let card = draft.makeBusinessCard()
+                    context.insert(card)
+                    card.note = note
+                    if !cards.contains(where: { $0.id == card.id }) {
+                        cards.append(card)
+                    }
                 }
+                note.businessCards = cards
                 note.updatedAt = Date()
                 try context.save()
             } onComplete: {
@@ -161,13 +170,17 @@ struct NoteDetailView: View {
     @ViewBuilder
     private func categoryTemplateSection() -> some View {
         if usesCustomTemplate {
-            CustomNoteTemplateView(data: customTemplateBinding, attachmentPaths: $note.attachmentPaths)
+            CustomNoteTemplateView(data: customTemplateBinding, attachmentPaths: $note.attachmentPaths) { onSelect in
+                guard isReadyForSheets else { return }
+                contactPickerRequest = ContactPickerRequest(onSelect: onSelect)
+            }
                 .onAppear { seedCustomTemplateIfNeeded() }
                 .onChange(of: note.attachmentPaths) { _, _ in touch() }
         } else {
             switch note.category {
             case .workLog:
                 WorkLogTemplateSection(note: note, onChange: touch)
+                    .id(note.persistentModelID)
             case .meetingMinutes:
                 MeetingMinutesTemplateSection(note: note, onChange: touch) { onSelect in
                     locationSearchRequest = LocationSearchRequest(onSelect: onSelect)
@@ -175,10 +188,15 @@ struct NoteDetailView: View {
                     guard isReadyForSheets else { return }
                     contactPickerRequest = ContactPickerRequest(onSelect: onSelect)
                 }
+                .id(note.persistentModelID)
             case .exhibition:
                 ExhibitionTemplateSection(note: note, onChange: touch) { onSelect in
                     exhibitionPresetRequest = ExhibitionPresetRequest(onSelect: onSelect)
+                } onPickContact: { onSelect in
+                    guard isReadyForSheets else { return }
+                    contactPickerRequest = ContactPickerRequest(onSelect: onSelect)
                 }
+                .id(note.persistentModelID)
             }
         }
     }
@@ -204,6 +222,27 @@ struct NoteDetailView: View {
                 note.templateData = TemplateCoder.encode(newValue)
                 touch()
             }
+        )
+    }
+
+    private var memoRTFBinding: Binding<String> {
+        if note.categorySelection == .builtin(.meetingMinutes) {
+            return Binding(
+                get: {
+                    TemplateCoder.decode(MeetingMinutesTemplateData.self, from: note.templateData)?.memoRTFData ?? ""
+                },
+                set: { newValue in
+                    var data = TemplateCoder.decode(MeetingMinutesTemplateData.self, from: note.templateData) ?? .init()
+                    data.memoRTFData = newValue
+                    note.templateData = TemplateCoder.encode(data)
+                    touch()
+                }
+            )
+        }
+
+        return Binding(
+            get: { note.contentRTFData },
+            set: { note.contentRTFData = $0; touch() }
         )
     }
 

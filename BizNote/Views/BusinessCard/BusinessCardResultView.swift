@@ -10,6 +10,16 @@ struct BusinessCardResultView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+    @State private var isEditing: Bool
+
+    init(card: BusinessCard, attachedNote: Note? = nil, onDone: (() -> Void)? = nil, onRescan: (() -> Void)? = nil) {
+        self.card = card
+        self.attachedNote = attachedNote
+        self.onDone = onDone
+        self.onRescan = onRescan
+        _isEditing = State(initialValue: onDone != nil || Date().timeIntervalSince(card.createdAt) < 5)
+    }
+
     var body: some View {
         Form {
             if let image = loadImage() {
@@ -26,11 +36,13 @@ struct BusinessCardResultView: View {
                 TextField(String(localized: "businessCard.name"), text: $card.name)
                 TextField(String(localized: "businessCard.jobTitle"), text: $card.jobTitle)
             }
+            .disabled(!isEditing)
 
             Section(String(localized: "businessCard.company")) {
                 TextField(String(localized: "businessCard.company"), text: $card.company)
                 TextField(String(localized: "businessCard.department"), text: $card.department)
             }
+            .disabled(!isEditing)
 
             Section(String(localized: "businessCard.contact")) {
                 LabeledField(label: String(localized: "businessCard.email"),
@@ -42,19 +54,13 @@ struct BusinessCardResultView: View {
                 LabeledField(label: String(localized: "businessCard.website"),
                              text: $card.website, keyboard: .URL)
             }
+            .disabled(!isEditing)
 
             Section(String(localized: "businessCard.memo")) {
                 TextField(String(localized: "businessCard.memo"), text: $card.memo, axis: .vertical).lineLimit(2...6)
             }
+            .disabled(!isEditing)
 
-            BusinessCardDuplicateSection(
-                name: card.name,
-                company: card.company,
-                phone: card.phone,
-                officePhone: card.officePhone,
-                email: card.email,
-                website: card.website
-            )
 
             BusinessCardContactActionsView(
                 name: $card.name,
@@ -77,13 +83,22 @@ struct BusinessCardResultView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                Button(String(localized: "action.save")) {
-                    try? context.save()
-                    if let onDone {
-                        onDone()
+                Button {
+                    if isEditing {
+                        try? context.save()
+                        if let onDone {
+                            onDone()
+                        } else {
+                            isEditing = false
+                        }
                     } else {
-                        dismiss()
+                        isEditing = true
                     }
+                } label: {
+                    Label(
+                        isEditing ? String(localized: "action.done") : String(localized: "action.edit"),
+                        systemImage: isEditing ? "checkmark" : "pencil"
+                    )
                 }
             }
         }

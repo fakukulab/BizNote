@@ -1,7 +1,7 @@
 import SwiftData
 import Foundation
 
-struct BusinessCardDraft: Sendable {
+struct BusinessCardDraft: Identifiable, Sendable {
     var id: UUID = UUID()
     var createdAt: Date = Date()
     var scannedLanguage: String = "ko"
@@ -20,6 +20,10 @@ struct BusinessCardDraft: Sendable {
     var memo: String = ""
 
     var imagePath: String = ""
+
+    /// OCR confidence (0...1) per field, keyed by field name. Not persisted — used only to
+    /// highlight low-confidence fields for the user to double-check in the scan review screen.
+    var fieldConfidence: [String: Double] = [:]
 
     func makeBusinessCard() -> BusinessCard {
         let card = BusinessCard()

@@ -1,5 +1,6 @@
 import SwiftUI
 import Contacts
+import UIKit
 
 private enum FollowUpDeadlineOption: String, CaseIterable, Identifiable {
     case today
@@ -27,6 +28,7 @@ struct MeetingMinutesTemplateSection: View {
 
     @State private var data: MeetingMinutesTemplateData
     @State private var participantInput: String = ""
+    @State private var agendaInput: String = ""
     @State private var discussionInput: String = ""
     @State private var decisionInput: String = ""
     @State private var locationService = LocationService()
@@ -34,6 +36,9 @@ struct MeetingMinutesTemplateSection: View {
     @State private var locationError: String? = nil
     @State private var showCardImporter = false
     @State private var deadlineOptions: [UUID: FollowUpDeadlineOption] = [:]
+    @State private var agendaItemIDs: [UUID]
+    @State private var discussionItemIDs: [UUID]
+    @State private var decisionItemIDs: [UUID]
 
     init(
         note: Note,
@@ -45,17 +50,48 @@ struct MeetingMinutesTemplateSection: View {
         self.onChange = onChange
         self.onSearchLocation = onSearchLocation
         self.onPickContact = onPickContact
-        _data = State(initialValue: TemplateCoder.decode(MeetingMinutesTemplateData.self, from: note.templateData) ?? .init())
+        let initialData = TemplateCoder.decode(MeetingMinutesTemplateData.self, from: note.templateData) ?? .init()
+        _data = State(initialValue: initialData)
+        _agendaItemIDs = State(initialValue: Self.makeIDs(count: Self.agendaItems(from: initialData.agenda).count))
+        _discussionItemIDs = State(initialValue: Self.makeIDs(count: initialData.discussionPoints.count))
+        _decisionItemIDs = State(initialValue: Self.makeIDs(count: initialData.decisions.count))
     }
 
     var body: some View {
         Group {
             Section(String(localized: "template.meeting.date")) {
-                DatePicker(
-                    String(localized: "template.meeting.date"),
-                    selection: $data.meetingDate
-                )
-                .labelsHidden()
+                HStack(spacing: 8) {
+                    DatePicker(
+                        String(localized: "template.meeting.date"),
+                        selection: Binding(
+                            get: { data.meetingDate },
+                            set: { setMeetingStart($0) }
+                        ),
+                        displayedComponents: .date
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .frame(minHeight: 36)
+
+                    FiveMinuteTimePicker(
+                        date: Binding(
+                            get: { data.meetingDate },
+                            set: { setMeetingStart($0) }
+                        )
+                    )
+                    .frame(width: 104, height: 40)
+
+                    Text("~")
+                        .foregroundStyle(.secondary)
+
+                    FiveMinuteTimePicker(
+                        date: Binding(
+                            get: { data.meetingEndDate },
+                            set: { data.meetingEndDate = roundToFiveMinutes($0) }
+                        )
+                    )
+                    .frame(width: 104, height: 40)
+                }
             }
 
             Section(String(localized: "template.meeting.location")) {
@@ -64,7 +100,7 @@ struct MeetingMinutesTemplateSection: View {
 
                     Button {
                         onSearchLocation { address in
-                            data.location = address
+                            applyLocationSelection(address)
                         }
                     } label: {
                         Image(systemName: "magnifyingglass")
@@ -77,34 +113,51 @@ struct MeetingMinutesTemplateSection: View {
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
+
+                if let onlineMeetingURL {
+                    HStack {
+                        Link(destination: onlineMeetingURL) {
+                            Label(data.onlineLink, systemImage: "link")
+                                .lineLimit(1)
+                        }
+
+                        Spacer()
+
+                        Button {
+                            data.onlineLink = ""
+                            data.isOnlineMeeting = false
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                        }
+                        .buttonStyle(.borderless)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(String(localized: "action.delete"))
+                    }
+                }
             }
 
             Section(String(localized: "template.meeting.participants")) {
                 ForEach(data.participants.indices, id: \.self) { i in
-                    Text(data.participants[i].name)
+                    Text(participantSummary(data.participants[i]))
                 }
                 .onDelete { data.participants.remove(atOffsets: $0) }
 
                 HStack {
                     TextField(String(localized: "template.meeting.participants"), text: $participantInput)
                     Spacer()
-                    Button {
-                        onPickContact { contact in
-                            addParticipant(from: contact)
+                    Menu {
+                        Button(String(localized: "businessCard.importFromCard")) {
+                            showCardImporter = true
+                        }
+                        Button(String(localized: "contacts.import", defaultValue: "연락처에서 불러오기")) {
+                            onPickContact { contact in
+                                addParticipant(from: contact)
+                            }
                         }
                     } label: {
-                        Image(systemName: "person.crop.circle.badge.magnifyingglass")
+                        Image(systemName: "person.crop.circle.badge.plus")
                     }
-                    .buttonStyle(.borderless)
-                    .accessibilityLabel(String(localized: "contacts.import", defaultValue: "Import from Contacts"))
-
-                    Button {
-                        showCardImporter = true
-                    } label: {
-                        Image(systemName: "person.crop.rectangle")
-                    }
-                    .buttonStyle(.borderless)
-                    .accessibilityLabel(String(localized: "businessCard.importFromCard"))
+                    .accessibilityLabel(String(localized: "template.meeting.participants.add", defaultValue: "참석자 추가"))
 
                     Button {
                         addParticipant()
@@ -116,15 +169,48 @@ struct MeetingMinutesTemplateSection: View {
             }
 
             Section(String(localized: "template.meeting.agenda")) {
-                TextEditor(text: $data.agenda)
-                    .frame(minHeight: editorHeight(for: data.agenda))
+                ForEach(agendaRows) { row in
+                    let i = row.index
+                    EditableMeetingTextRow(
+                        text: Binding(
+                            get: { agendaItem(at: i) },
+                            set: { updateAgendaItem(at: i, text: $0) }
+                        ),
+                        placeholder: String(localized: "template.meeting.agenda")
+                    )
+                }
+                .onDelete { deleteAgendaItems(at: $0) }
+                .onMove { source, destination in
+                    moveAgendaItems(from: source, to: destination)
+                }
+
+                HStack {
+                    TextField(String(localized: "template.meeting.agenda"), text: $agendaInput)
+                    Button {
+                        addAgenda()
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                    }
+                    .disabled(agendaInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
             }
+            .environment(\.editMode, .constant(.active))
 
             Section(String(localized: "template.meeting.discussion")) {
-                ForEach(data.discussionPoints.indices, id: \.self) { i in
-                    Text(verbatim: "\(String(localized: "list.bulletPrefix")) \(data.discussionPoints[i])")
+                ForEach(discussionRows) { row in
+                    let i = row.index
+                    EditableMeetingTextRow(
+                        text: Binding(
+                            get: { data.discussionPoints[i] },
+                            set: { data.discussionPoints[i] = $0 }
+                        ),
+                        placeholder: String(localized: "template.meeting.discussion")
+                    )
                 }
-                .onDelete { data.discussionPoints.remove(atOffsets: $0) }
+                .onDelete { deleteDiscussionItems(at: $0) }
+                .onMove { source, destination in
+                    moveDiscussionItems(from: source, to: destination)
+                }
 
                 HStack {
                     TextField(String(localized: "template.meeting.discussion"), text: $discussionInput)
@@ -136,12 +222,23 @@ struct MeetingMinutesTemplateSection: View {
                     .disabled(discussionInput.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
+            .environment(\.editMode, .constant(.active))
 
             Section(String(localized: "template.meeting.decisions")) {
-                ForEach(data.decisions.indices, id: \.self) { i in
-                    Text(verbatim: "\(String(localized: "list.bulletPrefix")) \(data.decisions[i])")
+                ForEach(decisionRows) { row in
+                    let i = row.index
+                    EditableMeetingTextRow(
+                        text: Binding(
+                            get: { data.decisions[i] },
+                            set: { data.decisions[i] = $0 }
+                        ),
+                        placeholder: String(localized: "template.meeting.decisions")
+                    )
                 }
-                .onDelete { data.decisions.remove(atOffsets: $0) }
+                .onDelete { deleteDecisionItems(at: $0) }
+                .onMove { source, destination in
+                    moveDecisionItems(from: source, to: destination)
+                }
 
                 HStack {
                     TextField(String(localized: "template.meeting.decisions"), text: $decisionInput)
@@ -153,6 +250,7 @@ struct MeetingMinutesTemplateSection: View {
                     .disabled(decisionInput.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
+            .environment(\.editMode, .constant(.active))
 
             Section(String(localized: "template.meeting.actions")) {
                 ForEach($data.actionItems) { $item in
@@ -168,12 +266,81 @@ struct MeetingMinutesTemplateSection: View {
             }
         }
         .onChange(of: data) { _, _ in save() }
+        .onAppear {
+            syncTextItemIDs()
+        }
         .navigationDestination(isPresented: $showCardImporter) {
             BusinessCardImportPickerView { card in
                 addParticipant(from: card)
                 showCardImporter = false
             }
         }
+    }
+
+    private var onlineMeetingURL: URL? {
+        normalizedURL(from: data.onlineLink)
+    }
+
+    private var agendaItems: [String] {
+        Self.agendaItems(from: data.agenda)
+    }
+
+    private var agendaRows: [MeetingTextRowReference] {
+        rows(for: agendaItems.indices, ids: agendaItemIDs)
+    }
+
+    private var discussionRows: [MeetingTextRowReference] {
+        rows(for: data.discussionPoints.indices, ids: discussionItemIDs)
+    }
+
+    private var decisionRows: [MeetingTextRowReference] {
+        rows(for: data.decisions.indices, ids: decisionItemIDs)
+    }
+
+    private static func agendaItems(from text: String) -> [String] {
+        text
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .map(String.init)
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    }
+
+    private static func makeIDs(count: Int) -> [UUID] {
+        (0..<count).map { _ in UUID() }
+    }
+
+    private func rows(for indices: Range<Int>, ids: [UUID]) -> [MeetingTextRowReference] {
+        indices.compactMap { index in
+            guard ids.indices.contains(index) else { return nil }
+            return MeetingTextRowReference(id: ids[index], index: index)
+        }
+    }
+
+    private func applyLocationSelection(_ value: String) {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        if let url = normalizedURL(from: trimmed) {
+            data.onlineLink = url.absoluteString
+            data.isOnlineMeeting = true
+        } else {
+            data.location = trimmed
+        }
+    }
+
+    private func normalizedURL(from value: String) -> URL? {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+
+        if let url = URL(string: trimmed), url.scheme?.hasPrefix("http") == true {
+            return url
+        }
+
+        guard trimmed.contains("."),
+              !trimmed.contains(" "),
+              let url = URL(string: "https://\(trimmed)") else {
+            return nil
+        }
+        return url
     }
 
     private func addParticipant() {
@@ -188,13 +355,45 @@ struct MeetingMinutesTemplateSection: View {
     private func addParticipant(from contact: CNContact) {
         var participant = MeetingMinutesTemplateData.Participant()
         participant.name = contact.displayName
+        participant.company = contact.organizationName
+        participant.jobTitle = contact.jobTitle
+        participant.phone = contact.phoneNumbers.first?.value.stringValue ?? ""
+        participant.email = contact.emailAddresses.first.map { String($0.value) } ?? ""
         data.participants.append(participant)
     }
 
     private func addParticipant(from card: BusinessCard) {
         var participant = MeetingMinutesTemplateData.Participant()
         participant.name = card.name
+        participant.company = card.company
+        participant.jobTitle = card.jobTitle
+        participant.phone = card.phone.isEmpty ? card.officePhone : card.phone
+        participant.email = card.email
+        participant.linkedCardID = card.id
         data.participants.append(participant)
+    }
+
+    private func setMeetingStart(_ newDate: Date) {
+        let roundedStart = roundToFiveMinutes(newDate)
+        data.meetingDate = roundedStart
+        data.meetingEndDate = roundedStart.addingTimeInterval(3600)
+    }
+
+    private func roundToFiveMinutes(_ date: Date) -> Date {
+        let interval = TimeInterval(5 * 60)
+        let rounded = (date.timeIntervalSinceReferenceDate / interval).rounded() * interval
+        return Date(timeIntervalSinceReferenceDate: rounded)
+    }
+
+    private func participantSummary(_ participant: MeetingMinutesTemplateData.Participant) -> String {
+        [
+            participant.name,
+            participant.jobTitle,
+            participant.company
+        ]
+        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .filter { !$0.isEmpty }
+        .joined(separator: " · ")
     }
 
     private func assigneeBinding(_ item: Binding<MeetingMinutesTemplateData.ActionItem>) -> Binding<String> {
@@ -277,10 +476,34 @@ struct MeetingMinutesTemplateSection: View {
         return formatter.string(from: date)
     }
 
+    private func agendaItem(at index: Int) -> String {
+        let items = agendaItems
+        guard items.indices.contains(index) else { return "" }
+        return items[index]
+    }
+
+    private func updateAgendaItem(at index: Int, text: String) {
+        var items = agendaItems
+        guard items.indices.contains(index) else { return }
+        items[index] = text
+        data.agenda = items.joined(separator: "\n")
+    }
+
+    private func addAgenda() {
+        let trimmed = agendaInput.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        var items = agendaItems
+        items.append(trimmed)
+        agendaItemIDs.append(UUID())
+        data.agenda = items.joined(separator: "\n")
+        agendaInput = ""
+    }
+
     private func addDiscussion() {
         let trimmed = discussionInput.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
         data.discussionPoints.append(trimmed)
+        discussionItemIDs.append(UUID())
         discussionInput = ""
     }
 
@@ -288,7 +511,56 @@ struct MeetingMinutesTemplateSection: View {
         let trimmed = decisionInput.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
         data.decisions.append(trimmed)
+        decisionItemIDs.append(UUID())
         decisionInput = ""
+    }
+
+    private func deleteAgendaItems(at offsets: IndexSet) {
+        var items = agendaItems
+        items.remove(atOffsets: offsets)
+        agendaItemIDs.remove(atOffsets: offsets)
+        data.agenda = items.joined(separator: "\n")
+    }
+
+    private func moveAgendaItems(from source: IndexSet, to destination: Int) {
+        var items = agendaItems
+        items.move(fromOffsets: source, toOffset: destination)
+        agendaItemIDs.move(fromOffsets: source, toOffset: destination)
+        data.agenda = items.joined(separator: "\n")
+    }
+
+    private func deleteDiscussionItems(at offsets: IndexSet) {
+        data.discussionPoints.remove(atOffsets: offsets)
+        discussionItemIDs.remove(atOffsets: offsets)
+    }
+
+    private func moveDiscussionItems(from source: IndexSet, to destination: Int) {
+        data.discussionPoints.move(fromOffsets: source, toOffset: destination)
+        discussionItemIDs.move(fromOffsets: source, toOffset: destination)
+    }
+
+    private func deleteDecisionItems(at offsets: IndexSet) {
+        data.decisions.remove(atOffsets: offsets)
+        decisionItemIDs.remove(atOffsets: offsets)
+    }
+
+    private func moveDecisionItems(from source: IndexSet, to destination: Int) {
+        data.decisions.move(fromOffsets: source, toOffset: destination)
+        decisionItemIDs.move(fromOffsets: source, toOffset: destination)
+    }
+
+    private func syncTextItemIDs() {
+        reconcileIDs(&agendaItemIDs, count: agendaItems.count)
+        reconcileIDs(&discussionItemIDs, count: data.discussionPoints.count)
+        reconcileIDs(&decisionItemIDs, count: data.decisions.count)
+    }
+
+    private func reconcileIDs(_ ids: inout [UUID], count: Int) {
+        if ids.count > count {
+            ids.removeLast(ids.count - count)
+        } else if ids.count < count {
+            ids.append(contentsOf: Self.makeIDs(count: count - ids.count))
+        }
     }
 
     private func useCurrentLocation() {
@@ -336,6 +608,36 @@ struct MeetingMinutesTemplateSection: View {
     }
 }
 
+private struct MeetingTextRowReference: Identifiable {
+    let id: UUID
+    let index: Int
+}
+
+private struct EditableMeetingTextRow: View {
+    @Binding var text: String
+    let placeholder: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text(String(localized: "list.bulletPrefix"))
+                .foregroundStyle(.secondary)
+                .padding(.top, 8)
+
+            TextField(placeholder, text: $text, axis: .vertical)
+                .lineLimit(1...4)
+                .textFieldStyle(.plain)
+
+            Image(systemName: "line.3.horizontal")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.top, 10)
+                .accessibilityHidden(true)
+        }
+        .padding(.vertical, 2)
+        .contentShape(Rectangle())
+    }
+}
+
 private struct MeetingActionRow: View {
     @Binding var item: MeetingMinutesTemplateData.ActionItem
     @State private var showDetailEditor = false
@@ -344,15 +646,15 @@ private struct MeetingActionRow: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 TextField(String(localized: "template.exhibition.taskTitle"), text: $item.task)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.plain)
 
                 Button {
                     showDetailEditor = true
                 } label: {
-                    Image(systemName: "info.circle")
+                    Label(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"), systemImage: "info.circle")
                 }
                 .buttonStyle(.borderless)
-                .accessibilityLabel(String(localized: "template.exhibition.taskDetails", defaultValue: "Task Details"))
+                .labelStyle(.iconOnly)
             }
 
             let summary = actionSummary
@@ -396,6 +698,62 @@ private struct MeetingActionRow: View {
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+}
+
+private struct FiveMinuteTimePicker: UIViewRepresentable {
+    @Binding var date: Date
+
+    func makeUIView(context: Context) -> UIDatePicker {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .time
+        picker.minuteInterval = 5
+        picker.preferredDatePickerStyle = .compact
+        picker.setContentCompressionResistancePriority(.required, for: .horizontal)
+        picker.addTarget(context.coordinator, action: #selector(Coordinator.valueChanged(_:)), for: .valueChanged)
+        context.coordinator.applyBodyFont(to: picker)
+        return picker
+    }
+
+    func updateUIView(_ picker: UIDatePicker, context: Context) {
+        context.coordinator.parent = self
+        if abs(picker.date.timeIntervalSince(date)) > 1 {
+            picker.date = date
+        }
+        context.coordinator.applyBodyFont(to: picker)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+
+    final class Coordinator: NSObject {
+        var parent: FiveMinuteTimePicker
+
+        init(parent: FiveMinuteTimePicker) {
+            self.parent = parent
+        }
+
+        @objc func valueChanged(_ picker: UIDatePicker) {
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.hour, .minute], from: picker.date)
+            parent.date = calendar.date(
+                bySettingHour: components.hour ?? 0,
+                minute: components.minute ?? 0,
+                second: 0,
+                of: parent.date
+            ) ?? parent.date
+        }
+
+        func applyBodyFont(to view: UIView) {
+            let bodyFont = UIFont.preferredFont(forTextStyle: .body)
+            for subview in view.subviews {
+                if let label = subview as? UILabel {
+                    label.font = bodyFont
+                }
+                applyBodyFont(to: subview)
+            }
+        }
     }
 }
 

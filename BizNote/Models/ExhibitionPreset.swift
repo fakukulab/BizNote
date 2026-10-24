@@ -19,6 +19,9 @@ final class ExhibitionPreset {
     var createdAt: Date = Date()
     var calendarEventIdentifier: String? = nil
 
+    @Relationship(deleteRule: .cascade, inverse: \EventVisitor.exhibitionPreset)
+    var visitors: [EventVisitor]? = []
+
     var dateRangeDescription: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yy"

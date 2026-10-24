@@ -75,18 +75,29 @@
     },
     "NSContactsUsageDescription" : {
       "comment" : "Privacy - Contacts Usage Description",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "Adds business card details to Contacts and checks for duplicate contacts."
+            "state" : "translated",
+            "value" : "Adds business card details to Contacts."
           }
         },
         "ko" : {
           "stringUnit" : {
+            "state" : "translated",
+            "value" : "명함 정보를 연락처에 추가하기 위해 사용합니다."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription" : {
+      "comment" : "Privacy - Face ID Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
             "state" : "new",
-            "value" : "명함 정보를 주소록에 추가하거나 중복된 연락처를 확인하기 위해 사용합니다."
+            "value" : "행사 모드 담당자 화면 잠금을 해제하기 위해 Face ID를 사용합니다."
           }
         }
       }
@@ -141,6 +152,23 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "업무 항목을 미리 알림 앱과 동기화하기 위해 사용합니다."
+          }
+        }
+      }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "comment" : "Privacy - Tracking Usage Description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your device's advertising identifier is used to deliver and measure ads. You can use all features of the app whether or not you allow this."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "광고 제공과 성과 측정을 위해 기기의 광고 식별자를 사용합니다. 허용하지 않아도 앱의 모든 기능을 동일하게 사용할 수 있습니다."
           }
         }
       }

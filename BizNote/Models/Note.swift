@@ -13,6 +13,7 @@ final class Note {
     var updatedAt: Date = Date()
 
     var content: String = ""
+    var contentRTFData: String = ""
     var tags: [String] = []
 
     var templateData: String = "{}"
@@ -57,23 +58,36 @@ final class Note {
     var categoryIconName: String { categorySelection.systemIconName }
     var categoryAccentColor: Color { categorySelection.accentColor }
 
-    /// The date shown in note lists — the date recorded inside the note's own
-    /// template content (work log date, meeting date, exhibition date) rather
-    /// than the note's last-modified timestamp, so it stays in sync whenever
-    /// that in-note date is edited.
+    /// The date recorded inside the note's own template content, used for
+    /// template-aware cross references such as same-day meetings.
     var contentDate: Date {
         if isCustomCategory {
-            return customTemplateDate ?? updatedAt
+            return customTemplateDate ?? createdAt
         }
 
         switch category {
         case .workLog:
-            return TemplateCoder.decode(WorkLogTemplateData.self, from: templateData)?.date ?? updatedAt
+            guard templateDataContains("date") else { return createdAt }
+            return TemplateCoder.decode(WorkLogTemplateData.self, from: templateData)?.date ?? createdAt
         case .meetingMinutes:
-            return TemplateCoder.decode(MeetingMinutesTemplateData.self, from: templateData)?.meetingDate ?? updatedAt
+            guard templateDataContains("meetingDate") else { return createdAt }
+            return TemplateCoder.decode(MeetingMinutesTemplateData.self, from: templateData)?.meetingDate ?? createdAt
         case .exhibition:
-            return TemplateCoder.decode(ExhibitionTemplateData.self, from: templateData)?.participatingDate ?? updatedAt
+            guard templateDataContains("participatingDate") else { return createdAt }
+            return TemplateCoder.decode(ExhibitionTemplateData.self, from: templateData)?.participatingDate ?? createdAt
         }
+    }
+
+    var listDate: Date {
+        createdAt
+    }
+
+    private func templateDataContains(_ key: String) -> Bool {
+        guard let data = templateData.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return false
+        }
+        return object[key] != nil
     }
 
     private var customTemplateDate: Date? {
@@ -93,6 +107,7 @@ final class Note {
         self.title = title
         self.categoryRaw = category.rawValue
         self.content = content
+        self.contentRTFData = ""
         self.createdAt = Date()
         self.updatedAt = Date()
         self.tags = []
@@ -108,6 +123,7 @@ final class Note {
         self.title = title
         self.categoryRaw = Note.customCategoryRawValue
         self.content = content
+        self.contentRTFData = ""
         self.createdAt = Date()
         self.updatedAt = Date()
         self.tags = []

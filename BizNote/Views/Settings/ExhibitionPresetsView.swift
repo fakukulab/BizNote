@@ -89,9 +89,7 @@ struct ExhibitionPresetsView: View {
                             .buttonStyle(.plain)
                             .listRowBackground(selectedPresetID == preset.id ? Color.accentColor.opacity(0.12) : Color.clear)
                         } else {
-                            NavigationLink {
-                                ExhibitionDetailView(preset: preset)
-                            } label: {
+                            NavigationLink(value: ExhibitionPresetDestination.detail(preset.id)) {
                                 presetRow(preset)
                             }
                         }
@@ -114,6 +112,19 @@ struct ExhibitionPresetsView: View {
         }
         .searchable(text: $searchText, prompt: String(localized: "search.prompt", defaultValue: "Search"))
         .navigationTitle(String(localized: "settings.exhibitionPresets"))
+        .navigationDestination(for: ExhibitionPresetDestination.self) { destination in
+            switch destination {
+            case .detail(let id):
+                if let preset = presets.first(where: { $0.id == id }) {
+                    ExhibitionDetailView(preset: preset)
+                } else {
+                    ContentUnavailableView(
+                        String(localized: "exhibitionPreset.empty"),
+                        systemImage: "building.columns"
+                    )
+                }
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -142,6 +153,9 @@ struct ExhibitionPresetsView: View {
             } else if customEndDate < customStartDate {
                 customEndDate = customStartDate
             }
+        }
+        .onChange(of: displayedCalendarMonth) { _, newValue in
+            customStartDate = startOfMonth(for: newValue)
         }
     }
 
@@ -227,6 +241,14 @@ struct ExhibitionPresetsView: View {
     private func endDate(from startDate: Date, addingMonths months: Int) -> Date {
         Calendar.current.date(byAdding: .month, value: months, to: Calendar.current.startOfDay(for: startDate)) ?? startDate
     }
+
+    private func startOfMonth(for date: Date) -> Date {
+        Calendar.current.dateInterval(of: .month, for: date)?.start ?? Calendar.current.startOfDay(for: date)
+    }
+}
+
+private enum ExhibitionPresetDestination: Hashable {
+    case detail(UUID)
 }
 
 enum ExhibitionPeriodFilter: String, CaseIterable, Identifiable {

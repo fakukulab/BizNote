@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import UniformTypeIdentifiers
 
 private struct ExhibitionPresetDraft {
     var name: String = ""
@@ -40,6 +41,8 @@ struct ExhibitionDetailView: View {
     @State private var draft = ExhibitionPresetDraft()
     @State private var logoItem: PhotosPickerItem?
     @State private var logoImage: UIImage?
+    @State private var showLogoPhotoPicker = false
+    @State private var showLogoFileImporter = false
     @State private var showDeleteConfirm = false
     @State private var isEditing = false
 
@@ -162,9 +165,13 @@ struct ExhibitionDetailView: View {
                 }
             } else {
                 ToolbarItemGroup(placement: .primaryAction) {
-                    Button(String(localized: "action.edit")) {
+                    Button {
                         beginEditing()
+                    } label: {
+                        Image(systemName: "pencil")
                     }
+                    .accessibilityLabel(String(localized: "action.edit"))
+
                     Button(role: .destructive) {
                         showDeleteConfirm = true
                     } label: {
@@ -198,41 +205,55 @@ struct ExhibitionDetailView: View {
             guard isEditing, let newValue else { return }
             Task {
                 if let data = try? await newValue.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data),
-                   let savedPath = ExhibitionLogoStorage.save(image, id: UUID()) {
-                    removeDraftLogoIfNeeded()
-                    draft.logoImagePath = savedPath
-                    logoImage = image
+                   let image = UIImage(data: data) {
+                    await MainActor.run {
+                        applyLogoImage(image)
+                    }
                 }
                 logoItem = nil
             }
+        }
+        .photosPicker(isPresented: $showLogoPhotoPicker, selection: $logoItem, matching: .images)
+        .fileImporter(isPresented: $showLogoFileImporter, allowedContentTypes: [.image], allowsMultipleSelection: false) { result in
+            guard isEditing,
+                  case .success(let urls) = result,
+                  let url = urls.first else { return }
+            let accessed = url.startAccessingSecurityScopedResource()
+            defer { if accessed { url.stopAccessingSecurityScopedResource() } }
+            guard let image = UIImage(contentsOfFile: url.path) else { return }
+            applyLogoImage(image)
         }
     }
 
     private var logoEditor: some View {
         HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.secondary.opacity(0.1))
-                if let logoImage {
-                    Image(uiImage: logoImage)
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image(systemName: "photo")
-                        .foregroundStyle(.secondary)
+            if isEditing {
+                Menu {
+                    Button {
+                        showLogoPhotoPicker = true
+                    } label: {
+                        Label(String(localized: "template.exhibition.images.fromPhotos", defaultValue: "사진앱에서 선택"), systemImage: "photo.on.rectangle")
+                    }
+
+                    Button {
+                        showLogoFileImporter = true
+                    } label: {
+                        Label(String(localized: "template.exhibition.images.fromFiles", defaultValue: "파일앱에서 선택"), systemImage: "folder")
+                    }
+                } label: {
+                    logoThumbnail
                 }
+                .buttonStyle(.plain)
+                .frame(width: 64, height: 64)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            } else {
+                logoThumbnail
+                    .frame(width: 64, height: 64)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .frame(width: 64, height: 64)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             if isEditing {
                 VStack(alignment: .leading, spacing: 6) {
-                    PhotosPicker(selection: $logoItem, matching: .images) {
-                        Label(String(localized: "exhibitions.image.upload", defaultValue: "Upload Image"), systemImage: "photo.badge.plus")
-                            .font(.caption)
-                    }
-
                     if !draft.logoImagePath.isEmpty {
                         Button(role: .destructive) {
                             removeDraftLogoIfNeeded()
@@ -244,6 +265,21 @@ struct ExhibitionDetailView: View {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private var logoThumbnail: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.secondary.opacity(0.1))
+            if let logoImage {
+                Image(uiImage: logoImage)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Image(systemName: "photo")
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -298,6 +334,13 @@ struct ExhibitionDetailView: View {
         try? context.save()
         Task { await CalendarReminderSyncService.shared.syncEvent(for: preset) }
         isEditing = false
+    }
+
+    private func applyLogoImage(_ image: UIImage) {
+        guard let savedPath = ExhibitionLogoStorage.save(image, id: UUID()) else { return }
+        removeDraftLogoIfNeeded()
+        draft.logoImagePath = savedPath
+        logoImage = image
     }
 
     private func removeDraftLogoIfNeeded() {

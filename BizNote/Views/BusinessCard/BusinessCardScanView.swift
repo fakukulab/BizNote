@@ -1,5 +1,5 @@
 import SwiftUI
-import SwiftData
+import UIKit
 import VisionKit
 import PhotosUI
 
@@ -26,54 +26,45 @@ struct BusinessCardScanView: UIViewControllerRepresentable {
             didFinishWith scan: VNDocumentCameraScan
         ) {
             let images = (0..<scan.pageCount).map { scan.imageOfPage(at: $0) }
-            controller.dismiss(animated: true) { [parent] in
-                parent.onFinish(images)
-            }
+            parent.onFinish(images)
         }
 
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
-            controller.dismiss(animated: true) { [parent] in
-                parent.onCancel()
-            }
+            parent.onCancel()
         }
 
         func documentCameraViewController(
             _ controller: VNDocumentCameraViewController,
             didFailWithError error: Error
         ) {
-            controller.dismiss(animated: true) { [parent] in
-                parent.onCancel()
-            }
+            parent.onCancel()
         }
     }
 }
 
 struct BusinessCardScanFlow: View {
-    var onSave: (BusinessCardDraft) throws -> Void
+    var onSave: ([BusinessCardDraft]) throws -> Void
     var onComplete: (() -> Void)? = nil
 
     @Environment(\.dismiss) private var dismiss
 
     @State private var scannedImages: [UIImage] = []
     @State private var isProcessing: Bool = false
-    @State private var processedDraft: BusinessCardDraft?
+    @State private var processedDrafts: [BusinessCardDraft] = []
     @State private var errorMessage: String?
     @State private var processingTask: Task<Void, Never>?
     @State private var processingTimeoutTask: Task<Void, Never>?
     @State private var currentProcessingID: UUID?
     @State private var saveErrorMessage: String?
-    @State private var photoPickerItem: PhotosPickerItem?
+    @State private var photoPickerItems: [PhotosPickerItem] = []
 
     var body: some View {
         NavigationStack {
             Group {
-                if processedDraft != nil {
-                    BusinessCardDraftResultView(
-                        draft: Binding(
-                            get: { processedDraft ?? BusinessCardDraft() },
-                            set: { processedDraft = $0 }
-                        ),
-                        onDone: { draft in finishScan(with: draft) },
+                if !processedDrafts.isEmpty {
+                    BusinessCardDraftsResultView(
+                        drafts: $processedDrafts,
+                        onDone: { drafts in finishScan(with: drafts) },
                         onRescan: { restartScan() }
                     )
                 } else if isProcessing {
@@ -105,6 +96,10 @@ struct BusinessCardScanFlow: View {
                     #else
                     BusinessCardScanView(
                         onFinish: { images in
+                            guard !images.isEmpty else {
+                                errorMessage = BusinessCardScanError.noScannedImage.localizedDescription
+                                return
+                            }
                             startProcessing(images)
                         },
                         onCancel: { dismiss() }
@@ -120,25 +115,31 @@ struct BusinessCardScanFlow: View {
                         dismiss()
                     }
                 }
-                if processedDraft == nil && !isProcessing && errorMessage == nil {
+                if processedDrafts.isEmpty && !isProcessing && errorMessage == nil {
                     ToolbarItem(placement: .primaryAction) {
-                        PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                        PhotosPicker(selection: $photoPickerItems, maxSelectionCount: nil, matching: .images) {
                             Image(systemName: "photo.on.rectangle")
                         }
                         .accessibilityLabel(String(localized: "businessCard.importFromPhotos", defaultValue: "사진 보관함에서 가져오기"))
                     }
                 }
             }
-            .onChange(of: photoPickerItem) { _, newValue in
-                guard let newValue else { return }
+            .onChange(of: photoPickerItems) { _, newValue in
+                guard !newValue.isEmpty else { return }
                 Task {
-                    if let data = try? await newValue.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data) {
-                        await MainActor.run {
-                            startProcessing([image])
+                    var images: [UIImage] = []
+                    for item in newValue {
+                        if let data = try? await item.loadTransferable(type: Data.self),
+                           let image = UIImage(data: data) {
+                            images.append(image)
                         }
                     }
-                    photoPickerItem = nil
+                    await MainActor.run {
+                        if !images.isEmpty {
+                            startProcessing(images)
+                        }
+                        photoPickerItems = []
+                    }
                 }
             }
             .alert(String(localized: "businessCard.saveFailed"), isPresented: Binding(
@@ -156,18 +157,21 @@ struct BusinessCardScanFlow: View {
 
     private func restartScan() {
         cancelProcessing()
-        processedDraft = nil
+        processedDrafts = []
         scannedImages = []
         errorMessage = nil
         saveErrorMessage = nil
     }
 
     @MainActor
-    private func finishScan(with draft: BusinessCardDraft) {
+    private func finishScan(with drafts: [BusinessCardDraft]) {
         do {
-            try onSave(draft)
-            onComplete?()
-            dismiss()
+            try onSave(drafts)
+            if let onComplete {
+                onComplete()
+            } else {
+                dismiss()
+            }
         } catch {
             saveErrorMessage = error.localizedDescription
         }
@@ -179,7 +183,7 @@ struct BusinessCardScanFlow: View {
         let processingID = UUID()
         currentProcessingID = processingID
         scannedImages = images
-        processedDraft = nil
+        processedDrafts = []
         errorMessage = nil
         isProcessing = true
 
@@ -187,7 +191,7 @@ struct BusinessCardScanFlow: View {
             try? await Task.sleep(for: .milliseconds(450))
             guard !Task.isCancelled else { return }
             do {
-                let draft = try await BusinessCardScanProcessor.process(images)
+                let drafts = try await BusinessCardScanProcessor.process(images)
                 await MainActor.run {
                     guard currentProcessingID == processingID else { return }
                     processingTimeoutTask?.cancel()
@@ -195,8 +199,7 @@ struct BusinessCardScanFlow: View {
                     isProcessing = false
                     currentProcessingID = nil
                     processingTask = nil
-                    processedDraft = draft
-                    finishScan(with: draft)
+                    processedDrafts = drafts
                 }
             } catch {
                 await MainActor.run {
@@ -211,8 +214,9 @@ struct BusinessCardScanFlow: View {
             }
         }
 
+        let timeoutSeconds = max(45, images.count * 70)
         processingTimeoutTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(25))
+            try? await Task.sleep(for: .seconds(timeoutSeconds))
             guard currentProcessingID == processingID, isProcessing else { return }
             processingTask?.cancel()
             processingTask = nil
@@ -229,231 +233,5 @@ struct BusinessCardScanFlow: View {
         processingTimeoutTask = nil
         currentProcessingID = nil
         isProcessing = false
-    }
-}
-
-private enum BusinessCardScanError: LocalizedError {
-    case noScannedImage
-
-    var errorDescription: String? {
-        switch self {
-        case .noScannedImage:
-            return String(localized: "businessCard.noScannedImage")
-        }
-    }
-}
-
-private enum BusinessCardScanProcessor {
-    static func process(_ images: [UIImage]) async throws -> BusinessCardDraft {
-        guard let first = images.first else {
-            throw BusinessCardScanError.noScannedImage
-        }
-
-        let processedImage = BusinessCardImageProcessor.normalizedBusinessCardImage(from: first)
-
-        let ocr = OCRService()
-        let recognizedLines = try await ocr.recognizeLines(from: processedImage)
-        try Task.checkCancellation()
-
-        let lines = recognizedLines.map(\.text)
-        let language = OCRService.detectPrimaryLanguage(from: lines)
-        let parser = BusinessCardParser()
-        var draft = parser.parse(recognizedLines: recognizedLines, language: language)
-
-        if let url = saveImage(processedImage, id: draft.id) {
-            draft.imagePath = url.lastPathComponent
-        }
-
-        return draft
-    }
-
-    private static func saveImage(_ image: UIImage, id: UUID) -> URL? {
-        guard let data = image.jpegData(compressionQuality: 0.85) else { return nil }
-        let dir = FileManager.cardImagesDirectory()
-        let url = dir.appendingPathComponent("\(id.uuidString).jpg")
-        do {
-            try data.write(to: url)
-            return url
-        } catch {
-            return nil
-        }
-    }
-}
-
-private struct BusinessCardDraftResultView: View {
-    @Binding var draft: BusinessCardDraft
-    var onDone: (BusinessCardDraft) -> Void
-    var onRescan: () -> Void
-
-    var body: some View {
-        Form {
-            if let image = loadImage() {
-                Section {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-            }
-
-            Section(String(localized: "businessCard.name")) {
-                TextField(String(localized: "businessCard.name"), text: $draft.name)
-                TextField(String(localized: "businessCard.jobTitle"), text: $draft.jobTitle)
-            }
-
-            Section(String(localized: "businessCard.company")) {
-                TextField(String(localized: "businessCard.company"), text: $draft.company)
-                TextField(String(localized: "businessCard.department"), text: $draft.department)
-            }
-
-            Section(String(localized: "businessCard.contact")) {
-                DraftLabeledField(label: String(localized: "businessCard.email"),
-                                  text: $draft.email, keyboard: .emailAddress)
-                DraftLabeledField(label: String(localized: "businessCard.phone"),
-                                  text: $draft.phone, keyboard: .phonePad)
-                DraftLabeledField(label: String(localized: "businessCard.officePhone"),
-                                  text: $draft.officePhone, keyboard: .phonePad)
-                DraftLabeledField(label: String(localized: "businessCard.website"),
-                                  text: $draft.website, keyboard: .URL)
-            }
-
-            Section(String(localized: "businessCard.memo")) {
-                TextField(String(localized: "businessCard.memo"), text: $draft.memo, axis: .vertical)
-                    .lineLimit(2...6)
-            }
-
-            BusinessCardDuplicateSection(
-                name: draft.name,
-                company: draft.company,
-                phone: draft.phone,
-                officePhone: draft.officePhone,
-                email: draft.email,
-                website: draft.website
-            )
-
-            BusinessCardContactActionsView(
-                name: $draft.name,
-                company: $draft.company,
-                jobTitle: $draft.jobTitle,
-                phone: $draft.phone,
-                email: $draft.email
-            )
-        }
-        .navigationTitle(String(localized: "businessCard.scanTitle"))
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .secondaryAction) {
-                Button {
-                    onRescan()
-                } label: {
-                    Label(String(localized: "businessCard.rescan"), systemImage: "camera.rotate")
-                }
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Button(String(localized: "action.save")) {
-                    onDone(draft)
-                }
-            }
-        }
-    }
-
-    private func loadImage() -> UIImage? {
-        guard !draft.imagePath.isEmpty else { return nil }
-        let url = FileManager.cardImagesDirectory().appendingPathComponent(draft.imagePath)
-        return UIImage(contentsOfFile: url.path)
-    }
-}
-
-private struct DraftLabeledField: View {
-    let label: String
-    @Binding var text: String
-    var keyboard: UIKeyboardType = .default
-
-    var body: some View {
-        LabeledContent(label) {
-            TextField(label, text: $text)
-                .keyboardType(keyboard)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .multilineTextAlignment(.trailing)
-        }
-    }
-}
-
-private enum BusinessCardScanLocalized {
-    static let simulatorCameraUnavailable = String(localized: "businessCard.simulatorCameraUnavailable")
-    static let simulatorSampleHint = String(localized: "businessCard.simulatorSampleHint")
-    static let useSampleCard = String(localized: "businessCard.useSampleCard")
-}
-
-#if targetEnvironment(simulator)
-private struct SimulatorScannerFallback: View {
-    var onPick: ([UIImage]) -> Void
-    var onCancel: () -> Void
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "camera.viewfinder")
-                .font(.system(size: 80))
-                .foregroundStyle(.tint)
-            Text(BusinessCardScanLocalized.simulatorCameraUnavailable)
-                .font(.headline)
-            Text(BusinessCardScanLocalized.simulatorSampleHint)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            Button {
-                onPick([sampleImage()])
-            } label: {
-                Label(BusinessCardScanLocalized.useSampleCard, systemImage: "doc.text.image")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.accentColor)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .padding(.horizontal)
-        }
-        .padding()
-    }
-
-    private func sampleImage() -> UIImage {
-        let size = CGSize(width: 900, height: 540)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        return renderer.image { ctx in
-            UIColor.white.setFill()
-            ctx.fill(CGRect(origin: .zero, size: size))
-            let lines = [
-                "홍길동",
-                "주식회사 비즈노트",
-                "개발본부 팀장",
-                "hong@biznote.co.kr",
-                "010-1234-5678",
-                "02-555-1234",
-                "FAX: 02-555-1235",
-                "www.biznote.co.kr",
-                "서울시 강남구 테헤란로 123"
-            ]
-            let attrs: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 32),
-                .foregroundColor: UIColor.black
-            ]
-            for (i, line) in lines.enumerated() {
-                let point = CGPoint(x: 40, y: 40 + i * 50)
-                line.draw(at: point, withAttributes: attrs)
-            }
-        }
-    }
-}
-#endif
-
-extension FileManager {
-    static func cardImagesDirectory() -> URL {
-        let base = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let dir = base.appendingPathComponent("BusinessCards", isDirectory: true)
-        if !FileManager.default.fileExists(atPath: dir.path) {
-            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        }
-        return dir
     }
 }

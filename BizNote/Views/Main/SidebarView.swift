@@ -14,15 +14,18 @@ struct SidebarView: View {
                 ForEach(SmartFolder.allCases) { smartFolder in
                     smartFolderRow(smartFolder)
                 }
-                NavigationLink(value: SidebarDestination.businessCards) {
-                    Label(String(localized: "nav.businessCardManagement"), systemImage: "person.crop.rectangle")
-                }
+                Label(String(localized: "nav.businessCardManagement"), systemImage: "person.crop.rectangle")
+                    .tag(SidebarDestination.businessCards)
             }
 
             Section(String(localized: "sidebar.eventList")) {
-                NavigationLink(value: SidebarDestination.exhibitions) {
-                    Label(String(localized: "nav.event"), systemImage: "building.columns")
-                }
+                Label(String(localized: "nav.event"), systemImage: "building.columns")
+                    .tag(SidebarDestination.exhibitions)
+            }
+
+            Section {
+                Label(String(localized: "nav.eventMode", defaultValue: "행사 모드"), systemImage: "sparkles.tv")
+                    .tag(SidebarDestination.eventMode)
             }
 
             Section(String(localized: "sidebar.noteList")) {
@@ -40,9 +43,8 @@ struct SidebarView: View {
             }
 
             Section {
-                NavigationLink(value: SidebarDestination.settings) {
-                    Label(String(localized: "nav.settings"), systemImage: "gearshape")
-                }
+                Label(String(localized: "nav.settings"), systemImage: "gearshape")
+                    .tag(SidebarDestination.settings)
             }
         }
         .navigationTitle("BizNote")
@@ -61,27 +63,25 @@ struct SidebarView: View {
 
     @ViewBuilder
     private func smartFolderRow(_ smartFolder: SmartFolder) -> some View {
-        NavigationLink(value: SidebarDestination.smartFolder(smartFolder)) {
-            Label(smartFolder.localizedName, systemImage: smartFolder.systemIconName)
-        }
+        Label(smartFolder.localizedName, systemImage: smartFolder.systemIconName)
+            .tag(SidebarDestination.smartFolder(smartFolder))
     }
 
     @ViewBuilder
     private func categoryRow(_ category: NoteCategorySelection) -> some View {
-        NavigationLink(value: SidebarDestination.category(category)) {
-            Label {
-                HStack {
-                    Text(category.localizedName)
-                    Spacer()
-                    Text(verbatim: "\(count(for: category))")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
-                }
-            } icon: {
-                Image(systemName: category.systemIconName)
-                    .foregroundStyle(category.accentColor)
+        Label {
+            HStack {
+                Text(category.localizedName)
+                Spacer()
+                Text(verbatim: "\(count(for: category))")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
             }
+        } icon: {
+            Image(systemName: category.systemIconName)
+                .foregroundStyle(category.accentColor)
         }
+        .tag(SidebarDestination.category(category))
     }
 
     private func count(for category: NoteCategorySelection) -> Int {

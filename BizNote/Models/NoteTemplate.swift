@@ -48,6 +48,7 @@ struct WorkLogTemplateData: Codable, Equatable {
 
 struct MeetingMinutesTemplateData: Codable, Equatable {
     var meetingDate: Date = Date()
+    var meetingEndDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
     var location: String = ""
     var locationLatitude: Double? = nil
     var locationLongitude: Double? = nil
@@ -58,6 +59,7 @@ struct MeetingMinutesTemplateData: Codable, Equatable {
     var discussionPoints: [String] = []
     var decisions: [String] = []
     var actionItems: [ActionItem] = []
+    var memoRTFData: String = ""
 
     struct Participant: Codable, Identifiable, Equatable {
         var id: UUID = UUID()
@@ -121,14 +123,16 @@ struct MeetingMinutesTemplateData: Codable, Equatable {
     init() {}
 
     enum CodingKeys: String, CodingKey {
-        case meetingDate, location, locationLatitude, locationLongitude,
+        case meetingDate, meetingEndDate, location, locationLatitude, locationLongitude,
              isOnlineMeeting, onlineLink, participants, agenda,
-             discussionPoints, decisions, actionItems
+             discussionPoints, decisions, actionItems, memoRTFData
     }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         meetingDate       = (try? c.decode(Date.self, forKey: .meetingDate)) ?? Date()
+        meetingEndDate    = (try? c.decode(Date.self, forKey: .meetingEndDate))
+            ?? (Calendar.current.date(byAdding: .hour, value: 1, to: meetingDate) ?? meetingDate)
         location          = (try? c.decode(String.self, forKey: .location)) ?? ""
         locationLatitude  = try? c.decodeIfPresent(Double.self, forKey: .locationLatitude)
         locationLongitude = try? c.decodeIfPresent(Double.self, forKey: .locationLongitude)
@@ -139,6 +143,7 @@ struct MeetingMinutesTemplateData: Codable, Equatable {
         discussionPoints  = (try? c.decode([String].self, forKey: .discussionPoints)) ?? []
         decisions         = (try? c.decode([String].self, forKey: .decisions)) ?? []
         actionItems       = (try? c.decode([ActionItem].self, forKey: .actionItems)) ?? []
+        memoRTFData       = (try? c.decode(String.self, forKey: .memoRTFData)) ?? ""
     }
 }
 

@@ -126,7 +126,8 @@ struct LocationSearchSheet: View {
     }
 
     private var recentLocations: [String] {
-        (try? JSONDecoder().decode([String].self, from: Data(recentLocationsData.utf8))) ?? []
+        ((try? JSONDecoder().decode([String].self, from: Data(recentLocationsData.utf8))) ?? [])
+            .filter { !isOnlineMeetingLink($0) }
     }
 
     @ViewBuilder
@@ -164,9 +165,19 @@ struct LocationSearchSheet: View {
     private func select(_ value: String) {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        saveRecent(trimmed)
+        if !isOnlineMeetingLink(trimmed) {
+            saveRecent(trimmed)
+        }
         onSelect(trimmed)
         dismiss()
+    }
+
+    private func isOnlineMeetingLink(_ value: String) -> Bool {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let url = URL(string: trimmed), url.scheme?.hasPrefix("http") == true {
+            return true
+        }
+        return trimmed.contains(".") && !trimmed.contains(" ")
     }
 
     private func saveRecent(_ value: String) {

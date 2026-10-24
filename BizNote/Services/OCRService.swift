@@ -34,6 +34,8 @@ struct RecognizedLine: Sendable {
 }
 
 final class OCRService: @unchecked Sendable {
+    static let defaultLanguages = ["ko-KR", "en-US", "ja-JP", "zh-Hans", "zh-Hant"]
+
     enum OCRError: LocalizedError {
         case invalidImage
         case timedOut
@@ -47,7 +49,7 @@ final class OCRService: @unchecked Sendable {
 
     func recognizeText(
         from image: UIImage,
-        languages: [String] = ["ko-KR", "en-US", "ja-JP", "zh-Hans", "zh-Hant"],
+        languages: [String] = OCRService.defaultLanguages,
         timeout: Duration = .seconds(30)
     ) async throws -> [String] {
         try await recognizeLines(from: image, languages: languages, timeout: timeout).map(\.text)
@@ -55,7 +57,8 @@ final class OCRService: @unchecked Sendable {
 
     func recognizeLines(
         from image: UIImage,
-        languages: [String] = ["ko-KR", "en-US", "ja-JP", "zh-Hans", "zh-Hant"],
+        languages: [String] = OCRService.defaultLanguages,
+        usesLanguageCorrection: Bool = true,
         timeout: Duration = .seconds(30)
     ) async throws -> [RecognizedLine] {
         let raceState = OCRRaceState<[RecognizedLine]>()
@@ -66,7 +69,11 @@ final class OCRService: @unchecked Sendable {
 
                 let recognitionTask = Task.detached(priority: .userInitiated) {
                     do {
-                        let lines = try await self.performRecognitionLines(from: image, languages: languages)
+                        let lines = try await self.performRecognitionLines(
+                            from: image,
+                            languages: languages,
+                            usesLanguageCorrection: usesLanguageCorrection
+                        )
                         raceState.finish(.success(lines))
                     } catch {
                         raceState.finish(.failure(error))
@@ -90,9 +97,11 @@ final class OCRService: @unchecked Sendable {
 
     private func performRecognitionLines(
         from image: UIImage,
-        languages: [String]
+        languages: [String],
+        usesLanguageCorrection: Bool
     ) async throws -> [RecognizedLine] {
-        guard let cgImage = image.cgImage else {
+        guard let renderedImage = renderedImage(from: image),
+              let cgImage = renderedImage.cgImage else {
             throw OCRError.invalidImage
         }
 
@@ -134,12 +143,12 @@ final class OCRService: @unchecked Sendable {
                 }
                 request.recognitionLanguages = languages
                 request.recognitionLevel = .accurate
-                request.usesLanguageCorrection = true
+                request.usesLanguageCorrection = usesLanguageCorrection
                 requestBox.request = request
 
                 let handler = VNImageRequestHandler(
                     cgImage: cgImage,
-                    orientation: CGImagePropertyOrientation(image.imageOrientation),
+                    orientation: .up,
                     options: [:]
                 )
                 DispatchQueue.global(qos: .userInitiated).async {
@@ -212,18 +221,56 @@ final class OCRService: @unchecked Sendable {
         }
     }
 
+    private func renderedImage(from image: UIImage) -> UIImage? {
+        if let cgImage = image.cgImage, image.imageOrientation == .up {
+            return UIImage(cgImage: cgImage, scale: image.scale, orientation: .up)
+        }
+
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = image.scale
+        format.opaque = true
+        let renderer = UIGraphicsImageRenderer(size: image.size, format: format)
+        return renderer.image { _ in
+            UIColor.white.setFill()
+            UIBezierPath(rect: CGRect(origin: .zero, size: image.size)).fill()
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
+    }
+
     static func detectPrimaryLanguage(from lines: [String]) -> String {
         let combined = lines.joined(separator: " ")
         let koreanCount = combined.unicodeScalars.filter {
             (0xAC00...0xD7AF).contains($0.value)
         }.count
+        let kanaCount = combined.unicodeScalars.filter {
+            (0x3040...0x309F).contains($0.value) || (0x30A0...0x30FF).contains($0.value)
+        }.count
         let chineseCount = combined.unicodeScalars.filter {
             (0x4E00...0x9FFF).contains($0.value)
         }.count
 
+        // Kana is unambiguous for Japanese; kanji alone is shared with Chinese, so check it first.
+        if kanaCount > 2 { return "ja" }
         if koreanCount > 3 { return "ko" }
         if chineseCount > 3 { return "zh" }
         return "en"
+    }
+
+    /// Reorders `base` so the recognition language(s) matching `detectedLanguage` come first,
+    /// improving CJK accuracy on a retry pass once the dominant script is known.
+    static func prioritizedLanguages(detected detectedLanguage: String, base: [String] = defaultLanguages) -> [String] {
+        let preferred: [String]
+        switch detectedLanguage {
+        case "ko": preferred = ["ko-KR"]
+        case "ja": preferred = ["ja-JP"]
+        case "zh": preferred = ["zh-Hans", "zh-Hant"]
+        case "en": preferred = ["en-US"]
+        default: preferred = []
+        }
+        guard !preferred.isEmpty else { return base }
+
+        let remaining = base.filter { !preferred.contains($0) }
+        return preferred.filter { base.contains($0) } + remaining
     }
 }
 

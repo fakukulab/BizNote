@@ -62,8 +62,10 @@ enum ContactsService {
 
 extension CNContact {
     var displayName: String {
-        let full = [givenName, familyName].filter { !$0.isEmpty }.joined(separator: " ")
-        return full.isEmpty ? organizationName : full
+        let formatter = CNContactFormatter()
+        formatter.style = .fullName
+        let fullName = formatter.string(from: self) ?? ""
+        return fullName.isEmpty ? organizationName : fullName
     }
     var primaryPhone: String { phoneNumbers.first?.value.stringValue ?? "" }
     var primaryEmail: String { emailAddresses.first.map { $0.value as String } ?? "" }

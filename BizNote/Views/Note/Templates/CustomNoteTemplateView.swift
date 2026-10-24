@@ -1,10 +1,12 @@
 import SwiftUI
 import SwiftData
 import QuickLook
+import Contacts
 
 struct CustomNoteTemplateView: View {
     @Binding var data: CustomNoteTemplateData
     @Binding var attachmentPaths: [String]
+    var onPickContact: (@escaping (CNContact) -> Void) -> Void
     @Environment(\.modelContext) private var context
     @Query(sort: \ExhibitionPreset.createdAt, order: .reverse)
     private var presets: [ExhibitionPreset]
@@ -22,6 +24,7 @@ struct CustomNoteTemplateView: View {
                             section: $section,
                             attachmentPaths: $attachmentPaths,
                             selectedPresetDescription: selectedPresetDescription(for: section),
+                            onPickContact: onPickContact,
                             onAddEvent: { showAddExhibition = true },
                             onPickEventPreset: { eventPresetTargetSectionID = section.id },
                             onSearchLocation: { locationSearchTargetSectionID = section.id }
@@ -84,6 +87,7 @@ private struct CustomNoteSectionContent: View {
     @Binding var section: CustomNoteTemplateSection
     @Binding var attachmentPaths: [String]
     let selectedPresetDescription: String?
+    var onPickContact: (@escaping (CNContact) -> Void) -> Void
     let onAddEvent: () -> Void
     let onPickEventPreset: () -> Void
     let onSearchLocation: () -> Void
@@ -117,7 +121,7 @@ private struct CustomNoteSectionContent: View {
         case .participants:
             ParticipantsSectionContent(participants: $section.participants)
         case .contacts:
-            ContactsSectionContent(contacts: $section.participants)
+            ContactsSectionContent(contacts: $section.participants, onPickContact: onPickContact)
         case .followUp:
             followUp
         case .addEvent:
@@ -369,7 +373,10 @@ private struct ParticipantsSectionContent: View {
 
 private struct ContactsSectionContent: View {
     @Binding var contacts: [CustomNoteParticipant]
+    var onPickContact: (@escaping (CNContact) -> Void) -> Void
     @State private var importTargetContactID: UUID?
+    @State private var showImportOptions = false
+    @State private var showCardImporter = false
 
     private static let countryNames: [String] = {
         let locale = Locale.current
@@ -386,8 +393,9 @@ private struct ContactsSectionContent: View {
                     countryMenu(for: $contact.country)
                     Button {
                         importTargetContactID = contact.id
+                        showImportOptions = true
                     } label: {
-                        Image(systemName: "person.crop.rectangle")
+                        Image(systemName: "person.crop.circle.badge.plus")
                     }
                     .buttonStyle(.borderless)
                     .accessibilityLabel(String(localized: "businessCard.importFromCard"))
@@ -434,12 +442,33 @@ private struct ContactsSectionContent: View {
         } label: {
             Label(String(localized: "action.add"), systemImage: "plus.circle.fill")
         }
+        .confirmationDialog(
+            String(localized: "businessCard.importFromCard"),
+            isPresented: $showImportOptions
+        ) {
+            Button(String(localized: "businessCard.importFromCard")) {
+                showCardImporter = true
+            }
+            Button(String(localized: "contacts.import", defaultValue: "연락처에서 불러오기")) {
+                onPickContact { contact in
+                    applyContact(contact)
+                    importTargetContactID = nil
+                }
+            }
+            Button(String(localized: "action.cancel"), role: .cancel) {
+                importTargetContactID = nil
+            }
+        }
         .navigationDestination(isPresented: Binding(
-            get: { importTargetContactID != nil },
-            set: { if !$0 { importTargetContactID = nil } }
+            get: { showCardImporter },
+            set: {
+                showCardImporter = $0
+                if !$0 { importTargetContactID = nil }
+            }
         )) {
             BusinessCardImportPickerView { card in
                 applyBusinessCard(card)
+                showCardImporter = false
                 importTargetContactID = nil
             }
         }
@@ -453,6 +482,16 @@ private struct ContactsSectionContent: View {
         contacts[index].jobTitle = card.jobTitle
         contacts[index].email = card.email
         contacts[index].phone = card.phone.isEmpty ? card.officePhone : card.phone
+    }
+
+    private func applyContact(_ contact: CNContact) {
+        guard let importTargetContactID,
+              let index = contacts.firstIndex(where: { $0.id == importTargetContactID }) else { return }
+        contacts[index].company = contact.organizationName
+        contacts[index].name = contact.displayName
+        contacts[index].jobTitle = contact.jobTitle
+        contacts[index].email = contact.emailAddresses.first.map { String($0.value) } ?? ""
+        contacts[index].phone = contact.phoneNumbers.first?.value.stringValue ?? ""
     }
 
     private func countryMenu(for country: Binding<String>) -> some View {
@@ -535,7 +574,7 @@ private struct AttachmentsSectionContent: View {
                     attachmentPaths.append(path)
                 }
             }
-        }
+        }  
         .sheet(item: Binding(
             get: { previewPath.map { AttachmentPreviewItem(path: $0) } },
             set: { previewPath = $0?.path }

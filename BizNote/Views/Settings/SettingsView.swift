@@ -6,26 +6,20 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(String(localized: "settings.noteCategories")) {
-                NavigationLink {
-                    NoteCategoriesSettingsView()
-                } label: {
+                NavigationLink(value: SettingsDestination.noteCategories) {
                     Label(String(localized: "settings.noteCategories"),
                           systemImage: "folder.badge.gearshape")
                 }
             }
 
             Section(String(localized: "settings.icloud.title")) {
-                NavigationLink {
-                    CloudSyncSettingsView()
-                } label: {
+                NavigationLink(value: SettingsDestination.iCloud) {
                     Label(String(localized: "settings.icloud.title"), systemImage: "icloud")
                 }
             }
 
             Section(String(localized: "settings.integration.title", defaultValue: "Apple 앱 연동")) {
-                NavigationLink {
-                    IntegrationSettingsView()
-                } label: {
+                NavigationLink(value: SettingsDestination.integration) {
                     Label(String(localized: "settings.integration.title", defaultValue: "Apple 앱 연동"), systemImage: "app.connected.to.app.below.fill")
                 }
             }
@@ -35,6 +29,16 @@ struct SettingsView: View {
                     showExporter = true
                 } label: {
                     Label(String(localized: "export.title"), systemImage: "square.and.arrow.up")
+                }
+            }
+
+            if AdService.shared.isPrivacyOptionsRequired {
+                Section {
+                    Button {
+                        Task { await AdService.shared.presentPrivacyOptions() }
+                    } label: {
+                        Label(String(localized: "settings.adPrivacyOptions", defaultValue: "광고 개인정보 설정"), systemImage: "hand.raised")
+                    }
                 }
             }
 
@@ -57,13 +61,23 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(String(localized: "nav.settings"))
+        .navigationDestination(for: SettingsDestination.self) { destination in
+            switch destination {
+            case .noteCategories:
+                NoteCategoriesSettingsView()
+            case .iCloud:
+                CloudSyncSettingsView()
+            case .integration:
+                IntegrationSettingsView()
+            }
+        }
         .sheet(isPresented: $showExporter) {
             NavigationStack { ExportView() }
         }
     }
 
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.25"
     }
 
     private var privacyPolicyURL: URL? {
@@ -73,6 +87,12 @@ struct SettingsView: View {
     private var supportURL: URL? {
         URL(string: "https://fakukulab.github.io/BizNote/support/")
     }
+}
+
+private enum SettingsDestination: Hashable {
+    case noteCategories
+    case iCloud
+    case integration
 }
 
 #Preview {

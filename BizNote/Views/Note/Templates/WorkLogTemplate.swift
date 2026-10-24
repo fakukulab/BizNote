@@ -15,7 +15,9 @@ struct WorkLogTemplateSection: View {
     private var meetings: [Note]
 
     private var sameDayMeetings: [Note] {
-        meetings.filter { Calendar.current.isDate($0.createdAt, inSameDayAs: data.date) }
+        meetings
+            .filter { Calendar.current.isDate($0.contentDate, inSameDayAs: data.date) }
+            .sorted { $0.contentDate < $1.contentDate }
     }
 
     init(note: Note, onChange: @escaping () -> Void) {
@@ -44,9 +46,7 @@ struct WorkLogTemplateSection: View {
             if !sameDayMeetings.isEmpty {
                 Section(String(localized: "template.workLog.sameDayMeetings")) {
                     ForEach(sameDayMeetings) { m in
-                        NavigationLink {
-                            NoteDetailView(note: m)
-                        } label: {
+                        NavigationLink(value: m.persistentModelID) {
                             Label(m.title.isEmpty ? String(localized: "category.meetingMinutes") : m.title,
                                   systemImage: "person.2.fill")
                         }

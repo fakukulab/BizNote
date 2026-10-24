@@ -11,13 +11,15 @@ struct BizNoteApp: App {
     init() {
         CloudSyncSettings.registerDefaults()
         CloudSyncSettings.applyBackupPreference()
+        EventModeSettings.registerDefaults()
 
         do {
             let schema = Schema([
                 Note.self,
                 BusinessCard.self,
                 ExhibitionPreset.self,
-                CustomCategory.self
+                CustomCategory.self,
+                EventVisitor.self
             ])
             let config = ModelConfiguration(
                 schema: schema,
@@ -36,6 +38,7 @@ struct BizNoteApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.locale, effectiveLocale)
+                .task { await AdService.shared.start() }
         }
         .modelContainer(container)
     }

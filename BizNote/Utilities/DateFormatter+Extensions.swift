@@ -20,4 +20,10 @@ extension DateFormatter {
         f.dateFormat = "yyyyMMdd_HHmmss"
         return f
     }()
+
+    static let filenameDateOnly: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyyMMdd"
+        return f
+    }()
 }

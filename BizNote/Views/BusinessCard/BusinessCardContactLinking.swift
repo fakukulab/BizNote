@@ -47,13 +47,13 @@ struct BusinessCardContactActionsView: View {
             Button {
                 showContactPicker = true
             } label: {
-                Label(String(localized: "contacts.import", defaultValue: "주소록에서 불러오기"),
+                Label(String(localized: "contacts.import", defaultValue: "연락처에서 불러오기"),
                       systemImage: "person.crop.circle.badge.magnifyingglass")
             }
             Button {
                 addToContacts()
             } label: {
-                Label(String(localized: "contacts.add", defaultValue: "주소록에 추가"),
+                Label(String(localized: "contacts.add", defaultValue: "연락처에 추가"),
                       systemImage: "person.crop.circle.badge.plus")
             }
         }
@@ -63,11 +63,11 @@ struct BusinessCardContactActionsView: View {
                 showContactPicker = false
             }
         }
-        .alert(String(localized: "contacts.add.success", defaultValue: "주소록에 추가되었습니다"),
+        .alert(String(localized: "contacts.add.success", defaultValue: "연락처에 추가되었습니다"),
                isPresented: $showAddSuccess) {
             Button(String(localized: "action.ok", defaultValue: "확인"), role: .cancel) {}
         }
-        .alert(String(localized: "contacts.add.error", defaultValue: "주소록에 추가하지 못했습니다"),
+        .alert(String(localized: "contacts.add.error", defaultValue: "연락처에 추가하지 못했습니다"),
                isPresented: Binding(
                 get: { errorMessage != nil },
                 set: { if !$0 { errorMessage = nil } }
@@ -90,7 +90,7 @@ struct BusinessCardContactActionsView: View {
         Task {
             let granted = await ContactsService.requestAccess()
             guard granted else {
-                errorMessage = String(localized: "contacts.access.denied", defaultValue: "주소록 접근 권한이 필요합니다.")
+                errorMessage = String(localized: "contacts.access.denied", defaultValue: "연락처 접근 권한이 필요합니다.")
                 return
             }
             let contact = ContactsService.makeMutableContact(
