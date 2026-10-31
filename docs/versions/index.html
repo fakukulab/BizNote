@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BizNote 버전 정보 · Release Notes</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/site.js"></script>
+</head>
+<body>
+<header class="site"><div class="wrap nav">
+  <a class="brand" href="../"><span class="logo">B</span>BizNote</a>
+  <ul>
+    <li><a href="../"><span lang="ko">소개</span><span lang="en">Home</span></a></li>
+    <li><a href="../support/"><span lang="ko">지원</span><span lang="en">Support</span></a></li>
+    <li><a href="../privacy-policy/"><span lang="ko">개인정보처리방침</span><span lang="en">Privacy</span></a></li>
+    <li><a class="active" href="../versions/"><span lang="ko">버전 정보</span><span lang="en">Releases</span></a></li>
+  </ul>
+  <button class="lang" id="langBtn" aria-label="Language"><span lang="ko">EN</span><span lang="en">한국어</span></button>
+</div></header>
+
+<div class="page-hero"><div class="wrap">
+  <span class="pill">Release notes</span>
+  <h1 lang="ko">버전 정보</h1><h1 lang="en">Release Notes</h1>
+  <div class="chips">
+    <span class="chip">📱 <span lang="ko">현재 버전</span><span lang="en">Latest</span> 2.0</span>
+    <span class="chip">iOS 17.0+</span>
+    <span class="chip">iPhone · iPad</span>
+  </div>
+</div></div>
+
+<div class="wrap">
+<div class="timeline">
+
+  <div class="rel"><div class="head"><span class="ver">2.0</span><span class="tag t-latest">LATEST</span></div>
+    <div class="card">
+      <span class="tag t-new">NEW</span>
+      <ul lang="ko"><li>행사 모드 추가: 명함 스캔 또는 직접 입력으로 방문객 정보를 수집하고 관심분야·자료 요청 여부를 기록</li><li>행사 모드 수집 화면에서 홍보 영상 반복 재생</li><li>ⓘ 아이콘을 눌러 PIN 또는 생체인증으로 담당자 화면(방문객 목록, 설정) 진입</li><li>명함·방문객 목록 PDF 내보내기 (1건당 1페이지)</li><li>방문객 데이터 선택 초기화 (행사별 또는 전체, 삭제 전 재확인) — 행사 정보와 일반 노트·명함은 유지</li></ul>
+      <ul lang="en"><li>New Event Mode: collect visitors by scanning cards or manual entry, and record interests and material requests</li><li>Looping promo video on the Event Mode collection screen</li><li>Tap ⓘ and authenticate with PIN or biometrics to open staff screens (visitor list, settings)</li><li>PDF export of cards and visitor lists, one page per entry</li><li>Selective reset of visitor data (per event or all, with confirmation) — event info and regular notes/cards are unaffected</li></ul>
+      <span class="tag t-imp">IMPROVED</span>
+      <ul lang="ko"><li>방문객 목록·상세에서 관심분야와 자료 요청 상태를 아이콘과 색상으로 표시</li><li>명함 OCR 정확도 향상: 어둡거나 반사가 심한 명함 보정, 인식 언어 우선 재인식, 전화번호·이메일 등 보정 결과 병합</li><li>스캔 결과에서 인식 신뢰도가 낮은 항목 표시</li></ul>
+      <ul lang="en"><li>Interests and request status shown with icons and colors in visitor list and detail</li><li>Better card OCR: enhancement for dark or glare-heavy cards, re-recognition prioritizing the detected language, merged results for phone numbers and emails</li><li>Low-confidence fields are flagged on the scan result</li></ul>
+    </div></div>
+
+  <div class="rel"><div class="head"><span class="ver">1.25</span></div>
+    <div class="card">
+      <span class="tag t-fix">FIXED</span>
+      <ul lang="ko"><li>모든 노트 리스트에서 작성일이 아닌 오늘 날짜가 표시되던 문제</li><li>한국어 화면에서 "Recent"가 "최근"으로 표시되도록 수정</li></ul>
+      <ul lang="en"><li>Note lists showing today's date instead of the creation date</li><li>"Recent" now shows as "최근" in the Korean UI</li></ul>
+      <span class="tag t-imp">IMPROVED</span>
+      <ul lang="ko"><li>회의록 안건·논의·결정사항을 항목 단위로 입력·수정하고 위아래로 재정렬</li><li>온라인 미팅 링크를 클릭 가능한 링크로 표시 (최근 위치 목록에는 저장 안 됨)</li><li>행사노트 입력 화면 정리: 테두리 제거, 구분선 정리, 폰트 색상·크기·정렬 통일</li><li>주요 아이콘 버튼과 메뉴의 접근성 라벨 개선</li></ul>
+      <ul lang="en"><li>Agenda, discussion and decision items in minutes are editable per item and reorderable</li><li>Online meeting links are clickable and excluded from the recent locations list</li><li>Cleaner event-note inputs: no borders, tidier dividers, consistent font color, size and alignment</li><li>Improved accessibility labels for key icon buttons and menus</li></ul>
+    </div></div>
+
+  <div class="rel"><div class="head"><span class="ver">1.24</span></div>
+    <div class="card">
+      <span class="tag t-fix">FIXED</span>
+      <ul lang="ko"><li>명함 스캔 후 인식 정보가 저장되지 않거나 목록에 나타나지 않는 문제</li><li>iPhone에서 명함 이미지가 저장되지 않는 문제</li><li>3열 레이아웃에서 상세 영역이 잘못 "노트 없음"으로 표시되는 문제</li></ul>
+      <ul lang="en"><li>Scanned card data not being saved or listed</li><li>Card images not saving on iPhone</li><li>Detail pane wrongly showing "No notes" in the 3-column layout</li></ul>
+      <span class="tag t-imp">IMPROVED</span>
+      <ul lang="ko"><li>여러 장 연속 스캔 시 명함별 OCR·파싱 결과를 정확히 반영</li><li>한국어·영어 명함 인식 및 파싱 규칙 보강</li><li>iPad 명함 관리: 세로 2열, 가로 3열(사이드바·목록·상세) 지원, 화면 회전 시 선택 메뉴 유지</li></ul>
+      <ul lang="en"><li>Accurate per-card OCR/parsing results when scanning several cards in a row</li><li>Stronger Korean and English card recognition and parsing</li><li>iPad card management: 2 columns in portrait, 3 columns in landscape; selected menu persists on rotation</li></ul>
+    </div></div>
+
+  <p class="meta" lang="ko">이전 버전의 변경 내역은 <a href="https://github.com/fakukulab/BizNote">GitHub 저장소</a>의 릴리스 노트에서 확인할 수 있어요.</p>
+  <p class="meta" lang="en">Earlier release notes are available in the <a href="https://github.com/fakukulab/BizNote">GitHub repository</a>.</p>
+</div>
+</div>
+
+<footer class="site"><div class="wrap row">
+  <div>© 2026 FAKUKU Lab · <a href="mailto:paccbet17@gmail.com">paccbet17@gmail.com</a></div>
+  <div><a href="../support/"><span lang="ko">지원</span><span lang="en">Support</span></a><a href="../privacy-policy/"><span lang="ko">개인정보처리방침</span><span lang="en">Privacy</span></a><a href="../versions/"><span lang="ko">버전 정보</span><span lang="en">Releases</span></a></div>
+</div></footer>
+</body></html>
