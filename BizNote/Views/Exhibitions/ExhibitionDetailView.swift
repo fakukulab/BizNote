@@ -329,6 +329,7 @@ struct ExhibitionDetailView: View {
         preset.homepage = draft.homepage
         preset.logoImagePath = draft.logoImagePath
         if oldLogoPath != draft.logoImagePath {
+            preset.logoImageData = ExhibitionLogoStorage.data(path: draft.logoImagePath)
             ExhibitionLogoStorage.remove(path: oldLogoPath)
         }
         try? context.save()
@@ -355,8 +356,11 @@ struct ExhibitionDetailView: View {
     }
 
     private func loadLogo() {
-        let path = isEditing ? draft.logoImagePath : preset.logoImagePath
-        logoImage = ExhibitionLogoStorage.load(path: path)
+        if isEditing && draft.logoImagePath != preset.logoImagePath {
+            logoImage = ExhibitionLogoStorage.load(path: draft.logoImagePath)
+        } else {
+            logoImage = ExhibitionLogoStorage.image(for: preset)
+        }
     }
 }
 
@@ -391,5 +395,36 @@ enum ExhibitionLogoStorage {
     static func remove(path: String) {
         guard !path.isEmpty else { return }
         try? FileManager.default.removeItem(at: directory().appendingPathComponent(path))
+    }
+
+    /// The saved logo of an exhibition. The synced image data comes first
+    /// (it may have been set on another device, e.g. the Mac app); the local
+    /// file is the fallback.
+    static func image(for preset: ExhibitionPreset) -> UIImage? {
+        if let data = preset.logoImageData, let image = UIImage(data: data) {
+            return image
+        }
+        return load(path: preset.logoImagePath)
+    }
+
+    /// Bytes of the logo file saved under `path` on this device, or nil when
+    /// there is no such file (e.g. a path saved by the Mac app).
+    static func data(path: String) -> Data? {
+        guard !path.isEmpty else { return nil }
+        return FileManager.default.contents(atPath: directory().appendingPathComponent(path).path)
+    }
+
+    /// Copies logos that exist only as local files into `logoImageData`, so
+    /// logos saved before iCloud image sync existed also reach other devices.
+    @discardableResult
+    static func backfillData(_ presets: [ExhibitionPreset]) -> Bool {
+        var changed = false
+        for preset in presets where preset.logoImageData == nil {
+            if let data = data(path: preset.logoImagePath) {
+                preset.logoImageData = data
+                changed = true
+            }
+        }
+        return changed
     }
 }

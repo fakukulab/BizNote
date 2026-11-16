@@ -16,6 +16,10 @@ final class ExhibitionPreset {
     var contact: String = ""
     var homepage: String = ""
     var logoImagePath: String = ""
+    /// The logo image itself. `logoImagePath` only points at a file on the
+    /// device that saved it, so the bytes are stored here to sync via iCloud
+    /// (CloudKit) to the other app/devices. Must match the Mac model.
+    @Attribute(.externalStorage) var logoImageData: Data? = nil
     var createdAt: Date = Date()
     var calendarEventIdentifier: String? = nil
 

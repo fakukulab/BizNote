@@ -145,6 +145,9 @@ struct ExhibitionPresetsView: View {
         }
         .onAppear {
             recalculateEndDate(for: periodFilter)
+            if ExhibitionLogoStorage.backfillData(presets) {
+                try? context.save()
+            }
         }
         .onChange(of: customStartDate) { _, newValue in
             customStartDate = Calendar.current.startOfDay(for: newValue)
@@ -186,7 +189,7 @@ struct ExhibitionPresetsView: View {
 
     @ViewBuilder
     private func logoThumbnail(for preset: ExhibitionPreset) -> some View {
-        if let image = ExhibitionLogoStorage.load(path: preset.logoImagePath) {
+        if let image = ExhibitionLogoStorage.image(for: preset) {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
