@@ -808,6 +808,8 @@ struct ExhibitionPresetEditor: View {
     @State private var organizer: String = ""
     @State private var introduction: String = ""
     @State private var exhibitItems: String = ""
+    @State private var introductionRTFData: String = ""
+    @State private var exhibitItemsRTFData: String = ""
     @State private var supervisor: String = ""
     @State private var contact: String = ""
     @State private var homepage: String = ""
@@ -844,13 +846,14 @@ struct ExhibitionPresetEditor: View {
                     .accessibilityLabel(String(localized: "template.meeting.searchLocation"))
                 }
             }
+            // Same rich text editor as the note memo field.
             Section(String(localized: "exhibitions.introduction", defaultValue: "Event Introduction")) {
-                TextEditor(text: $introduction)
-                    .frame(minHeight: editorHeight(for: introduction))
+                RichTextEditor(text: $introduction, rtfData: $introductionRTFData)
+                    .frame(minHeight: editorHeight(for: introduction, minimumLines: 5) + 44)
             }
             Section(String(localized: "exhibitions.exhibitItems", defaultValue: "Exhibit Items")) {
-                TextEditor(text: $exhibitItems)
-                    .frame(minHeight: editorHeight(for: exhibitItems))
+                RichTextEditor(text: $exhibitItems, rtfData: $exhibitItemsRTFData)
+                    .frame(minHeight: editorHeight(for: exhibitItems, minimumLines: 5) + 44)
             }
             Section(String(localized: "exhibitionPreset.organizer")) {
                 TextField(String(localized: "exhibitionPreset.organizer"), text: $organizer)
@@ -886,6 +889,8 @@ struct ExhibitionPresetEditor: View {
                     target.organizer = organizer
                     target.introduction = introduction
                     target.exhibitItems = exhibitItems
+                    target.introductionRTFData = introductionRTFData
+                    target.exhibitItemsRTFData = exhibitItemsRTFData
                     target.supervisor = supervisor
                     target.contact = contact
                     target.homepage = homepage
@@ -912,6 +917,8 @@ struct ExhibitionPresetEditor: View {
                 organizer = preset.organizer
                 introduction = preset.introduction
                 exhibitItems = preset.exhibitItems
+                introductionRTFData = ExhibitionRichText.rtf(preset.introductionRTFData, matching: preset.introduction)
+                exhibitItemsRTFData = ExhibitionRichText.rtf(preset.exhibitItemsRTFData, matching: preset.exhibitItems)
                 supervisor = preset.supervisor
                 contact = preset.contact
                 homepage = preset.homepage

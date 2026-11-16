@@ -11,6 +11,8 @@ private struct ExhibitionPresetDraft {
     var organizer: String = ""
     var introduction: String = ""
     var exhibitItems: String = ""
+    var introductionRTFData: String = ""
+    var exhibitItemsRTFData: String = ""
     var supervisor: String = ""
     var contact: String = ""
     var homepage: String = ""
@@ -26,6 +28,8 @@ private struct ExhibitionPresetDraft {
         organizer = preset.organizer
         introduction = preset.introduction
         exhibitItems = preset.exhibitItems
+        introductionRTFData = ExhibitionRichText.rtf(preset.introductionRTFData, matching: preset.introduction)
+        exhibitItemsRTFData = ExhibitionRichText.rtf(preset.exhibitItemsRTFData, matching: preset.exhibitItems)
         supervisor = preset.supervisor
         contact = preset.contact
         homepage = preset.homepage
@@ -80,25 +84,29 @@ struct ExhibitionDetailView: View {
                 }
             }
 
+            // Same rich text editor as the note memo field (formatting toolbar,
+            // grows with its text, read-only until Edit is pressed).
             Section(String(localized: "exhibitions.introduction", defaultValue: "Event Introduction")) {
-                if isEditing {
-                    TextEditor(text: $draft.introduction)
-                        .frame(minHeight: editorHeight(for: draft.introduction, minimumLines: 3))
-                } else {
-                    Text(preset.introduction)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                RichTextEditor(
+                    text: isEditing ? $draft.introduction : .constant(preset.introduction),
+                    rtfData: isEditing
+                        ? $draft.introductionRTFData
+                        : .constant(ExhibitionRichText.rtf(preset.introductionRTFData, matching: preset.introduction))
+                )
+                .frame(minHeight: editorHeight(for: isEditing ? draft.introduction : preset.introduction, minimumLines: 5) + 44)
             }
+            .disabled(!isEditing)
 
             Section(String(localized: "exhibitions.exhibitItems", defaultValue: "Exhibit Items")) {
-                if isEditing {
-                    TextEditor(text: $draft.exhibitItems)
-                        .frame(minHeight: editorHeight(for: draft.exhibitItems, minimumLines: 3))
-                } else {
-                    Text(preset.exhibitItems)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                RichTextEditor(
+                    text: isEditing ? $draft.exhibitItems : .constant(preset.exhibitItems),
+                    rtfData: isEditing
+                        ? $draft.exhibitItemsRTFData
+                        : .constant(ExhibitionRichText.rtf(preset.exhibitItemsRTFData, matching: preset.exhibitItems))
+                )
+                .frame(minHeight: editorHeight(for: isEditing ? draft.exhibitItems : preset.exhibitItems, minimumLines: 5) + 44)
             }
+            .disabled(!isEditing)
 
             Section {
                 LabeledContent(String(localized: "exhibitions.organizer", defaultValue: "Host")) {
@@ -324,6 +332,8 @@ struct ExhibitionDetailView: View {
         preset.organizer = draft.organizer
         preset.introduction = draft.introduction
         preset.exhibitItems = draft.exhibitItems
+        preset.introductionRTFData = draft.introductionRTFData
+        preset.exhibitItemsRTFData = draft.exhibitItemsRTFData
         preset.supervisor = draft.supervisor
         preset.contact = draft.contact
         preset.homepage = draft.homepage
@@ -361,6 +371,24 @@ struct ExhibitionDetailView: View {
         } else {
             logoImage = ExhibitionLogoStorage.image(for: preset)
         }
+    }
+}
+
+/// Formatting (RTF) for the exhibition introduction / exhibit items fields.
+enum ExhibitionRichText {
+    /// Returns `rtf` only while its plain text still matches `text`. The Mac app
+    /// edits these fields as plain text, so stale formatting from an older
+    /// version must not hide the newer text.
+    static func rtf(_ rtf: String, matching text: String) -> String {
+        guard !rtf.isEmpty,
+              let data = Data(base64Encoded: rtf),
+              let attributed = try? NSAttributedString(
+                  data: data,
+                  options: [.documentType: NSAttributedString.DocumentType.rtf],
+                  documentAttributes: nil
+              ) else { return "" }
+        let normalize: (String) -> String = { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        return normalize(attributed.string) == normalize(text) ? rtf : ""
     }
 }
 
